@@ -1,0 +1,10 @@
+# Local secrets
+supabase_keys.md
+.env
+.env.*
+!.env.example
+
+# Supabase local state
+.supabase/
+supabase/.temp/
+
