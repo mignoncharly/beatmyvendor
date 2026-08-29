@@ -8,3 +8,13 @@ supabase_keys.md
 .supabase/
 supabase/.temp/
 
+# Next.js
+.next/
+node_modules/
+*.tsbuildinfo
+npm-debug.log*
+
+# Test artifacts
+test-results/
+playwright-report/
+coverage/

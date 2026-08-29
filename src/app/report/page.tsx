@@ -1,0 +1,7 @@
+import type { Metadata } from "next";
+import { submitReport } from "@/app/actions/privacy";
+import { requireIdentity } from "@/lib/auth";
+import s from "../legal.module.css";
+
+export const metadata:Metadata={title:"Report a concern"};
+export default async function ReportPage({searchParams}:{searchParams:Promise<{duel?:string;vendor?:string;sent?:string}>}){await requireIdentity();const query=await searchParams;return <main className={s.page}><header className={s.header}><span className="eyebrow">Marketplace safety</span><h1>Report a concern.</h1><p>Report suspected fraud, inaccurate claims, prohibited contact details, harassment, impersonation, collusion, or other marketplace abuse.</p></header><section className={s.section}><form className={s.request} action={submitReport}><label>Duel ID<input name="duelId" defaultValue={query.duel||""} placeholder="UUID, if reporting a Duel"/></label><label>Vendor organization ID<input name="vendorOrganizationId" defaultValue={query.vendor||""} placeholder="UUID, if reporting a vendor"/></label><label>Reason<input name="reason" required minLength={3} maxLength={160} placeholder="Short reason"/></label><label>Details<textarea name="details" rows={7} maxLength={2000} placeholder="Describe what happened. Do not include passwords or unnecessary personal data."/></label><button className="button button-primary">Submit report →</button></form></section></main>}

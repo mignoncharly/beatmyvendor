@@ -1,0 +1,29 @@
+[Unit]
+Description=BeatMyVendor Next.js application
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=mignon
+Group=mignon
+WorkingDirectory=/home/mignon/apps/VendorDuel
+Environment=NODE_ENV=production
+Environment=PATH=/home/mignon/.nvm/versions/node/v22.23.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/home/mignon/apps/VendorDuel/deploy/run-with-production-env.sh /home/mignon/.nvm/versions/node/v22.23.2/bin/node /home/mignon/apps/VendorDuel/node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3000
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+KillSignal=SIGTERM
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/mignon/apps/VendorDuel/.next
+UMask=0027
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=beatmyvendor
+
+[Install]
+WantedBy=multi-user.target

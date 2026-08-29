@@ -1,0 +1,12 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { requireOrganization } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
+import { DashboardShell } from "@/components/dashboard-shell";
+export const metadata: Metadata = { title: "Vendor introductions" }; export const dynamic = "force-dynamic";
+export default async function VendorIntroductionsPage() {
+  const { organization } = await requireOrganization("vendor"); const supabase = await createClient(); const { data: introductions } = await supabase.from("introductions").select("id,status,buyer_organization_id,introduced_at,created_at").eq("vendor_organization_id", organization.organizationId).order("created_at", { ascending: false });
+  const unlocked = (introductions ?? []).filter((item) => item.status === "paid" || item.status === "introduced"); const ids = unlocked.map((item) => item.buyer_organization_id);
+  const [{ data: companies }, { data: profiles }] = ids.length ? await Promise.all([supabase.from("organizations").select("id,name,website_url").in("id", ids), supabase.from("buyer_profiles").select("organization_id,contact_name,contact_email").in("organization_id", ids)]) : [{ data: [] }, { data: [] }];
+  return <DashboardShell area="Vendor" organization={organization.name}><div className="page-back"><Link href="/vendor">← Vendor dashboard</Link></div><div className="dashboard-heading"><div><span className="eyebrow">Introductions</span><h1>Buyers who picked you.</h1></div></div><div className="introduction-grid">{introductions?.map((intro) => { const company = companies?.find((item) => item.id === intro.buyer_organization_id); const profile = profiles?.find((item) => item.organization_id === intro.buyer_organization_id); const visible = intro.status === "paid" || intro.status === "introduced"; return <article className="introduction-card" key={intro.id}><span className={`badge badge-${intro.status}`}>{intro.status.replaceAll("_", " ")}</span><h2>{visible ? company?.name : "Buyer identity locked"}</h2>{visible ? <><p>{profile?.contact_name ?? "Buyer contact"}</p><a href={`mailto:${profile?.contact_email}`}>{profile?.contact_email}</a>{company?.website_url && <a href={company.website_url} target="_blank" rel="noreferrer">Visit website ↗</a>}</> : <p>Pay the one-time introduction fee to unlock buyer contact details.</p>}</article>; })}{!introductions?.length && <div className="empty-panel"><h2>No introductions yet.</h2><p>Selected challenges will appear here.</p></div>}</div></DashboardShell>;
+}

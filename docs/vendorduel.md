@@ -1171,7 +1171,7 @@ Vendor notification.
 
 Stripe checkout.
 
-€99 introduction product.
+€99.99 introduction product.
 
 Webhooks.
 

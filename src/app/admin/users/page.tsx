@@ -1,0 +1,9 @@
+import type { Metadata } from "next";
+import { setUserSuspension } from "@/app/actions/admin-operations";
+import { requireAdmin } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
+import { AdminFrame } from "@/components/admin-frame";
+import s from "../admin.module.css";
+
+export const metadata: Metadata={title:"User management"}; export const dynamic="force-dynamic";
+export default async function UsersPage(){await requireAdmin();const supabase=await createClient();const {data:users}=await supabase.from("users").select("id,email,display_name,system_role,suspended_at,created_at,organization_members(count)").order("created_at",{ascending:false}).limit(100);return <AdminFrame><div className={s.navSpace}/><div className="dashboard-heading"><div><span className="eyebrow">Access control</span><h1>User management</h1></div><span className="badge">Latest 100</span></div><div className={s.tableWrap}><table className={s.table}><thead><tr><th>User</th><th>Role</th><th>Workspaces</th><th>Joined</th><th>Status / action</th></tr></thead><tbody>{users?.map((user)=><tr key={user.id}><td><strong>{user.display_name||"Unnamed"}</strong><br/>{user.email}</td><td>{user.system_role}</td><td>{(Array.isArray(user.organization_members)?user.organization_members[0]:user.organization_members)?.count||0}</td><td>{new Date(user.created_at).toLocaleDateString("en")}</td><td>{user.system_role==="admin"?<span className="badge">Protected</span>:<form className={s.actions} action={setUserSuspension}><input type="hidden" name="id" value={user.id}/><input type="hidden" name="suspended" value={user.suspended_at?"false":"true"}/>{!user.suspended_at&&<input name="reason" required minLength={3} placeholder="Suspension reason"/>}<button className="button button-secondary">{user.suspended_at?"Restore":"Suspend"}</button></form>}</td></tr>)}</tbody></table></div></AdminFrame>}
