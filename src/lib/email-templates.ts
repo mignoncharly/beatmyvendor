@@ -32,11 +32,11 @@ const duelPath = (fallback: string) => (payload: Payload) =>
 
 const templates: Record<string, Copy> = {
   email_verification: {
-    subject: "Your secure BeatMyyVendor sign-in link",
+    subject: "Your secure BeatMyVendor sign-in link",
     eyebrow: "Secure access",
     headline: "One click. You’re in.",
-    summary: "Use the secure link below to sign in and continue building your BeatMyyVendor workspace.",
-    detail: "For your security, this link is intended only for you and expires automatically. BeatMyyVendor will never ask you to send a password, payment detail, or verification document by email.",
+    summary: "Use the secure link below to sign in and continue building your BeatMyVendor workspace.",
+    detail: "For your security, this link is intended only for you and expires automatically. BeatMyVendor will never ask you to send a password, payment detail, or verification document by email.",
     cta: "Sign in securely",
     path: "/login",
     tone: "success"
@@ -80,7 +80,7 @@ const templates: Record<string, Copy> = {
     tone: "warning"
   },
   offers_ready: {
-    subject: "Your BeatMyyVendor comparison is ready",
+    subject: "Your BeatMyVendor comparison is ready",
     eyebrow: "Decision time",
     headline: "See who improved the deal.",
     summary: "The offer window is closed and your submitted Challenges are ready for a side-by-side review.",
@@ -100,7 +100,7 @@ const templates: Record<string, Copy> = {
     tone: "success"
   },
   introduction_completed: {
-    subject: "Your BeatMyyVendor introduction is ready",
+    subject: "Your BeatMyVendor introduction is ready",
     eyebrow: "Introduction unlocked",
     headline: "The conversation can begin.",
     summary: "Stripe confirmed the introduction payment and the selected buyer and vendor can now contact one another directly.",
@@ -110,16 +110,16 @@ const templates: Record<string, Copy> = {
     tone: "success"
   },
   deal_confirmation: {
-    subject: "How did your BeatMyyVendor introduction progress?",
+    subject: "How did your BeatMyVendor introduction progress?",
     eyebrow: "Outcome follow-up",
     headline: "Help us close the loop.",
     summary: "Tell us whether the introduction led to a contract, another decision, or an ongoing conversation.",
-    detail: "Your commercial outcome stays private. BeatMyyVendor publishes a verified Win only after separate, explicit consent.",
+    detail: "Your commercial outcome stays private. BeatMyVendor publishes a verified Win only after separate, explicit consent.",
     cta: "Confirm the outcome",
     path: "/buyer/introductions"
   },
   vendor_approved: {
-    subject: "Your BeatMyyVendor vendor workspace is approved",
+    subject: "Your BeatMyVendor vendor workspace is approved",
     eyebrow: "Approval complete",
     headline: "You’re cleared to compete.",
     summary: "Your vendor workspace can now browse qualified opportunities and submit sealed replacement offers.",
@@ -141,7 +141,7 @@ const templates: Record<string, Copy> = {
     subject: "Your Challenge has been submitted",
     eyebrow: "Offer locked",
     headline: "Your offer is officially in.",
-    summary: "BeatMyyVendor recorded and versioned your commercial terms for this Duel.",
+    summary: "BeatMyVendor recorded and versioned your commercial terms for this Duel.",
     detail: "The buyer cannot review offers until the comparison stage, and no competing vendor can see your terms. Submitted offers cannot be edited.",
     cta: "Track your Challenge",
     path: "/vendor/challenges",
@@ -167,10 +167,10 @@ const templates: Record<string, Copy> = {
     path: "/vendor/opportunities"
   },
   payment_receipt: {
-    subject: "Receipt for your BeatMyyVendor introduction",
+    subject: "Receipt for your BeatMyVendor introduction",
     eyebrow: "Payment confirmed",
     headline: "Your introduction payment is complete.",
-    summary: "Stripe confirmed the one-time BeatMyyVendor introduction payment.",
+    summary: "Stripe confirmed the one-time BeatMyVendor introduction payment.",
     detail: "Keep this message with your transaction records. Your billing workspace contains the current payment status and provider receipt when available.",
     cta: "View billing details",
     path: "/vendor/billing",
@@ -216,7 +216,7 @@ const templates: Record<string, Copy> = {
     tone: "warning"
   },
   payment_failed: {
-    subject: "Your BeatMyyVendor payment was not completed",
+    subject: "Your BeatMyVendor payment was not completed",
     eyebrow: "Payment action required",
     headline: "The introduction is still locked.",
     summary: "Stripe did not confirm the introduction payment.",
@@ -229,14 +229,14 @@ const templates: Record<string, Copy> = {
     subject: "A vendor has been reported",
     eyebrow: "Marketplace alert",
     headline: "A conduct report needs investigation.",
-    summary: "A BeatMyyVendor user submitted a report concerning a vendor organization.",
+    summary: "A BeatMyVendor user submitted a report concerning a vendor organization.",
     detail: "Review the report, relevant marketplace activity, and prior operator actions before recording an outcome.",
     cta: "Open the report queue",
     path: "/admin/reports",
     tone: "warning"
   },
   data_request_received: {
-    subject: "We received your BeatMyyVendor privacy request",
+    subject: "We received your BeatMyVendor privacy request",
     eyebrow: "Data rights",
     headline: "Your request is recorded.",
     summary: "Your privacy request has entered our reviewed workflow.",
@@ -248,12 +248,12 @@ const templates: Record<string, Copy> = {
 };
 
 const fallback: Copy = {
-  subject: "BeatMyyVendor update",
+  subject: "BeatMyVendor update",
   eyebrow: "Marketplace update",
   headline: "There’s an update in your workspace.",
-  summary: "A BeatMyyVendor activity related to your account is ready to review.",
+  summary: "A BeatMyVendor activity related to your account is ready to review.",
   detail: "Sign in securely to see the latest status and any action that may be required.",
-  cta: "Open BeatMyyVendor",
+  cta: "Open BeatMyVendor",
   path: "/onboarding"
 };
 
@@ -303,7 +303,7 @@ export function renderBrandedEmail(templateKey: string, payload: Payload = {}, c
     "<table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"background:#F1EFE8\"><tr><td align=\"center\" style=\"padding:38px 14px\">",
     "<table role=\"presentation\" class=\"email-shell\" width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:600px;max-width:600px\">",
     "<tr><td style=\"background:#171713;padding:24px 30px;border-radius:14px 14px 0 0\"><table role=\"presentation\" width=\"100%\"><tr>",
-    "<td style=\"font-size:18px;font-weight:900;letter-spacing:-.02em;color:#FFFDF7\"><span style=\"display:inline-block;color:#171713;background:#D9FF43;padding:5px 8px;margin-right:9px;border-radius:5px\">V</span>BEATMYYVENDOR</td>",
+    "<td style=\"font-size:18px;font-weight:900;letter-spacing:-.02em;color:#FFFDF7\"><span style=\"display:inline-block;color:#171713;background:#D9FF43;padding:5px 8px;margin-right:9px;border-radius:5px\">V</span>BEATMYVENDOR</td>",
     "<td align=\"right\" style=\"font-size:11px;font-weight:800;letter-spacing:.12em;color:#B9B8B1;text-transform:uppercase\">TRANSACTIONAL</td>",
     "</tr></table></td></tr>",
     "<tr><td class=\"email-pad\" style=\"background:#FFFDF7;padding:46px 44px;border-left:1px solid #D8D5CB;border-right:1px solid #D8D5CB\">",
@@ -318,13 +318,13 @@ export function renderBrandedEmail(templateKey: string, payload: Payload = {}, c
     "<p style=\"margin:28px 0 0;padding-top:22px;border-top:1px solid #E2DFD5;font-size:12px;line-height:1.65;color:#838178\">If the button does not work, copy and paste this link into your browser:<br><a href=\"", escapeHtml(actionUrl), "\" style=\"color:#33342F;word-break:break-all\">", escapeHtml(actionUrl), "</a></p>",
     "</td></tr>",
     "<tr><td class=\"email-footer\" style=\"padding:26px 28px;background:#E7E4DA;border:1px solid #D8D5CB;border-radius:0 0 14px 14px;font-size:11px;line-height:1.65;color:#6A6962\">",
-    "<strong style=\"color:#2E2F2A\">BeatMyyVendor</strong> · Software buying, reversed.<br>This operational message was sent because of activity in your BeatMyyVendor account or workspace. Never send passwords, card details, or verification documents by email.",
+    "<strong style=\"color:#2E2F2A\">BeatMyVendor</strong> · Software buying, reversed.<br>This operational message was sent because of activity in your BeatMyVendor account or workspace. Never send passwords, card details, or verification documents by email.",
     "</td></tr></table></td></tr></table></body></html>"
   ].join("");
 
   const text = [
-    "BEATMYYVENDOR", meta, "", greeting, "", copy.headline, "", copy.summary, "", copy.detail, "",
-    copy.cta + ": " + actionUrl, "", "BeatMyyVendor · Software buying, reversed.",
+    "BEATMYVENDOR", meta, "", greeting, "", copy.headline, "", copy.summary, "", copy.detail, "",
+    copy.cta + ": " + actionUrl, "", "BeatMyVendor · Software buying, reversed.",
     "Never send passwords, card details, or verification documents by email."
   ].join("\n");
 

@@ -23,7 +23,7 @@ export function resendConfigured() {
 }
 
 function sender() {
-  return process.env.RESEND_FROM_EMAIL?.trim() || "BeatMyyVendor <notifications@beatmyvendor.com>";
+  return process.env.RESEND_FROM_EMAIL?.trim() || "BeatMyVendor <notifications@beatmyvendor.com>";
 }
 
 function replyTo() {

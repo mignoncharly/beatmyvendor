@@ -17,7 +17,7 @@ export default async function NewDuelPage() {
   ]);
   return <DashboardShell area="Buyer" organization={organization.name}>
     <div className="page-back"><Link href="/buyer">← Buyer dashboard</Link></div>
-    <div className="dashboard-heading"><div><span className="eyebrow">Start a Duel</span><h1>Turn your current contract into leverage.</h1><p className="heading-copy">Save a draft at any time. Submitted duels stay private while BeatMyyVendor verifies the opportunity.</p></div><span className="badge">About 5 minutes</span></div>
+    <div className="dashboard-heading"><div><span className="eyebrow">Start a Duel</span><h1>Turn your current contract into leverage.</h1><p className="heading-copy">Save a draft at any time. Submitted duels stay private while BeatMyVendor verifies the opportunity.</p></div><span className="badge">About 5 minutes</span></div>
     {categories?.length && products?.length ? <DuelForm categories={categories} products={products} /> : <div className="empty-panel"><h2>The catalog is not ready.</h2><p>Ask an administrator to add an active software category and product.</p></div>}
   </DashboardShell>;
 }

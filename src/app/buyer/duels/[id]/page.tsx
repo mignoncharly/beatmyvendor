@@ -9,11 +9,11 @@ export const metadata: Metadata = { title: "Duel details" };
 export const dynamic = "force-dynamic";
 
 const statusCopy: Record<string, string> = {
-  draft: "Finish the brief and submit it when you are ready.", pending_verification: "BeatMyyVendor is checking the opportunity before it goes live.",
+  draft: "Finish the brief and submit it when you are ready.", pending_verification: "BeatMyVendor is checking the opportunity before it goes live.",
   open: "Qualified vendors can now submit structured offers.", reviewing: "Submissions are closed. Your offers are ready to compare.",
   selected: "You selected an offer. The vendor introduction is next.", introduced: "The buyer and selected vendor have been introduced.",
   converted: "This duel produced a confirmed deal.", closed: "This duel is closed.", expired: "The offer window ended without a selection.",
-  rejected: "BeatMyyVendor needs updated information before this can proceed."
+  rejected: "BeatMyVendor needs updated information before this can proceed."
 };
 
 function namedRelation(value: { name: string } | { name: string }[] | null) { return Array.isArray(value) ? value[0]?.name : value?.name; }

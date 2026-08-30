@@ -1,4 +1,4 @@
-project_id = "beatmyyvendor"
+project_id = "beatmyvendor"
 
 [api]
 enabled = true

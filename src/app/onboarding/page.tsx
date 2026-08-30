@@ -12,7 +12,7 @@ export default async function OnboardingPage({ searchParams }: { searchParams: P
   return (
     <section className="onboarding-shell">
       <div className="onboarding-heading"><div className="eyebrow">Account verified</div><h1>Build your side<br />of the table.</h1><p>Signed in as <strong>{identity.email}</strong></p><form action={signOut}><button className="text-button">Sign out</button></form></div>
-      <div className="auth-card wide"><span className="card-kicker">WORKSPACE SETUP</span><h2>How will you use BeatMyyVendor?</h2><OnboardingForm initialKind={initialKind} /></div>
+      <div className="auth-card wide"><span className="card-kicker">WORKSPACE SETUP</span><h2>How will you use BeatMyVendor?</h2><OnboardingForm initialKind={initialKind} /></div>
     </section>
   );
 }

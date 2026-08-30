@@ -46,7 +46,7 @@ export async function requestMagicLink(
       html: email.html,
       text: email.text,
       templateKey: "email_verification",
-      idempotencyKey: "beatmyyvendor/auth/" + createHash("sha256").update(data.properties.hashed_token).digest("hex")
+      idempotencyKey: "beatmyvendor/auth/" + createHash("sha256").update(data.properties.hashed_token).digest("hex")
     });
   } catch {
     return { error: "We could not send the sign-in link. Please try again shortly." };

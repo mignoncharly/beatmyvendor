@@ -1,6 +1,6 @@
-# BeatMyyVendor 1.0 (no docker, webapp, pwa, mobile friendly and responsive, english is default language, and add frnech and german)
+# BeatMyVendor 1.0 (no docker, webapp, pwa, mobile friendly and responsive, english is default language, and add frnech and german)
 
-## Positionnement
+## Positionnement 
 
 **Buyer side**
 
@@ -221,7 +221,7 @@ Champs obligatoires:
 * support inclus
 * commentaire commercial court
 
-BeatMyyVendor calcule automatiquement:
+BeatMyVendor calcule automatiquement:
 
 ### Current
 
@@ -251,7 +251,7 @@ Puis:
 
 Un fournisseur **ne voit pas les prix des concurrents avant la fin de la période de soumission**.
 
-Sinon BeatMyyVendor devient une reverse auction.
+Sinon BeatMyVendor devient une reverse auction.
 
 Je ne veux pas ça.
 
@@ -281,7 +281,7 @@ Le buyer voit:
 
 Mais **aucune offre n'est automatiquement marquée "winner"**.
 
-BeatMyyVendor peut dire:
+BeatMyVendor peut dire:
 
 * Lowest annual cost
 * Longest price lock
@@ -352,7 +352,7 @@ Exemple:
 >
 > You can now continue the commercial discussion directly.
 
-BeatMyyVendor conserve l'état:
+BeatMyVendor conserve l'état:
 
 ### Introduced
 
@@ -462,7 +462,7 @@ Share image automatiquement générée pour LinkedIn/X.
 
 # Pages publiques à la release
 
-BeatMyyVendor ne sortira pas avec juste une homepage.
+BeatMyVendor ne sortira pas avec juste une homepage.
 
 Il faut au minimum:
 
@@ -512,7 +512,7 @@ Pages comparison
 
 `/pricing`
 
-Pricing BeatMyyVendor
+Pricing BeatMyVendor
 
 `/login`
 
@@ -632,7 +632,7 @@ et les vendors déclarent:
 
 Lorsqu'un duel Zendesk apparaît:
 
-BeatMyyVendor identifie automatiquement les vendors compatibles et leur envoie:
+BeatMyVendor identifie automatiquement les vendors compatibles et leur envoie:
 
 > 🔥 New Zendesk Duel
 >
@@ -729,7 +729,7 @@ Stripe.
 
 Un produit:
 
-### BeatMyyVendor Introduction
+### BeatMyVendor Introduction
 
 `€99`
 
@@ -1029,7 +1029,7 @@ Et surtout:
 
 Je ne les découpe surtout pas en "MVP puis features".
 
-Toutes les phases aboutissent à **une seule release BeatMyyVendor 1.0**.
+Toutes les phases aboutissent à **une seule release BeatMyVendor 1.0**.
 
 ## Phase 0 - verrouillage, 1h
 
@@ -1187,7 +1187,7 @@ Introduction emails.
 
 Billing history.
 
-**À cette heure, BeatMyyVendor peut réellement faire de l'argent.**
+**À cette heure, BeatMyVendor peut réellement faire de l'argent.**
 
 ---
 
@@ -1367,7 +1367,7 @@ Premiers vendors ajoutés.
 
 Puis:
 
-# **BeatMyyVendor is live.**
+# **BeatMyVendor is live.**
 
 Pas:
 

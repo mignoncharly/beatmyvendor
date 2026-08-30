@@ -2,10 +2,10 @@ begin;
 
 -- Rollback-only fixtures. Fixed IDs make every assertion explicit.
 insert into auth.users (id,email,raw_app_meta_data,raw_user_meta_data) values
-  ('00000000-0000-4000-8000-000000000001','admin.integration@beatmyyvendor.invalid','{}','{}'),
-  ('00000000-0000-4000-8000-000000000002','buyer-a.integration@beatmyyvendor.invalid','{}','{}'),
-  ('00000000-0000-4000-8000-000000000003','buyer-b.integration@beatmyyvendor.invalid','{}','{}'),
-  ('00000000-0000-4000-8000-000000000004','vendor.integration@beatmyyvendor.invalid','{}','{}');
+  ('00000000-0000-4000-8000-000000000001','admin.integration@beatmyvendor.invalid','{}','{}'),
+  ('00000000-0000-4000-8000-000000000002','buyer-a.integration@beatmyvendor.invalid','{}','{}'),
+  ('00000000-0000-4000-8000-000000000003','buyer-b.integration@beatmyvendor.invalid','{}','{}'),
+  ('00000000-0000-4000-8000-000000000004','vendor.integration@beatmyvendor.invalid','{}','{}');
 
 update public.users set system_role='admin' where id='00000000-0000-4000-8000-000000000001';
 select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
@@ -21,10 +21,10 @@ insert into public.organization_members (organization_id,user_id,role) values
   ('10000000-0000-4000-8000-000000000002','00000000-0000-4000-8000-000000000003','owner'),
   ('10000000-0000-4000-8000-000000000003','00000000-0000-4000-8000-000000000004','owner');
 insert into public.buyer_profiles (organization_id,business_email_status,contact_name,contact_email) values
-  ('10000000-0000-4000-8000-000000000001','verified','Buyer A Contact','buyer-a.integration@beatmyyvendor.invalid'),
-  ('10000000-0000-4000-8000-000000000002','verified','Buyer B Contact','buyer-b.integration@beatmyyvendor.invalid');
+  ('10000000-0000-4000-8000-000000000001','verified','Buyer A Contact','buyer-a.integration@beatmyvendor.invalid'),
+  ('10000000-0000-4000-8000-000000000002','verified','Buyer B Contact','buyer-b.integration@beatmyvendor.invalid');
 insert into public.vendor_profiles (organization_id,approval_status,approved_at,approved_by,contact_name,contact_email)
-values ('10000000-0000-4000-8000-000000000003','approved',now(),'00000000-0000-4000-8000-000000000001','Vendor Contact','vendor.integration@beatmyyvendor.invalid');
+values ('10000000-0000-4000-8000-000000000003','approved',now(),'00000000-0000-4000-8000-000000000001','Vendor Contact','vendor.integration@beatmyvendor.invalid');
 
 insert into public.categories (id,name,slug) values ('20000000-0000-4000-8000-000000000001','Integration Category','integration-category');
 insert into public.software_products (id,category_id,name,slug) values

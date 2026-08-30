@@ -13,7 +13,7 @@ export default function ErrorPage({ error, retry }: { error: Error & { digest?: 
       <div className="status-card" role="alert">
         <span className="eyebrow">Something went wrong</span>
         <h1 id="error-title">That didn’t land.</h1>
-        <p>Your data is still safe. Try the request again; if the problem continues, contact BeatMyyVendor support.</p>
+        <p>Your data is still safe. Try the request again; if the problem continues, contact BeatMyVendor support.</p>
         {error.digest && <p className="error-reference">Reference: {error.digest}</p>}
         <div className="error-actions">
           <button className="button button-primary" type="button" onClick={retry}>Try again</button>

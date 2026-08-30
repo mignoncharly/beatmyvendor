@@ -9,7 +9,7 @@ let sendResendEmail: typeof import("./resend").sendResendEmail;
 beforeEach(async () => {
   vi.resetModules();
   process.env.RESEND_API_KEY = "re_test_key";
-  process.env.RESEND_FROM_EMAIL = "BeatMyyVendor <notifications@beatmyvendor.com>";
+  process.env.RESEND_FROM_EMAIL = "BeatMyVendor <notifications@beatmyvendor.com>";
   process.env.RESEND_REPLY_TO_EMAIL = "support@beatmyvendor.com";
   ({ EmailProviderError, resendConfigured, sendResendEmail } = await import("./resend"));
 });
@@ -25,7 +25,7 @@ const input = {
   subject: "A professional update",
   html: "<p>Hello</p>",
   text: "Hello",
-  idempotencyKey: "beatmyyvendor/notification/550e8400-e29b-41d4-a716-446655440000",
+  idempotencyKey: "beatmyvendor/notification/550e8400-e29b-41d4-a716-446655440000",
   templateKey: "duel_approved"
 };
 
@@ -46,7 +46,7 @@ describe("sendResendEmail", () => {
       "Idempotency-Key": input.idempotencyKey
     });
     expect(JSON.parse(String(request?.body))).toMatchObject({
-      from: "BeatMyyVendor <notifications@beatmyvendor.com>",
+      from: "BeatMyVendor <notifications@beatmyvendor.com>",
       to: ["buyer@example.com"],
       reply_to: "support@beatmyvendor.com",
       subject: input.subject,

@@ -47,7 +47,7 @@ export async function refundPayment(formData: FormData) {
   const supabase = await createClient();
   const { data: payment, error } = await supabase.from("payments").select("provider_payment_intent_id,status").eq("id", id).single();
   if (error || payment?.status !== "paid" || !payment.provider_payment_intent_id) throw new Error("This payment is not eligible for a Stripe refund.");
-  const refund = await getStripe().refunds.create({ payment_intent: payment.provider_payment_intent_id, reason: "requested_by_customer", metadata: { beatmyyvendor_payment_id: id, operator_reason: refundReason.slice(0, 500) } }, { idempotencyKey: `admin-refund-${id}` });
+  const refund = await getStripe().refunds.create({ payment_intent: payment.provider_payment_intent_id, reason: "requested_by_customer", metadata: { beatmyvendor_payment_id: id, operator_reason: refundReason.slice(0, 500) } }, { idempotencyKey: `admin-refund-${id}` });
   const { error: recordError } = await supabase.rpc("admin_record_refund", { p_payment_id: id, p_provider_refund_id: refund.id, p_reason: refundReason });
   if (recordError) throw new Error("Stripe accepted the refund, but local reconciliation is pending.");
   revalidatePath("/admin", "layout");
