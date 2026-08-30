@@ -1,0 +1,20 @@
+[Unit]
+Description=Deliver queued VendorDuel transactional emails
+After=network-online.target beatmyvendor.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=mignon
+Group=mignon
+WorkingDirectory=/home/mignon/apps/VendorDuel
+Environment=PATH=/home/mignon/.nvm/versions/node/v22.23.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/home/mignon/apps/VendorDuel/deploy/run-with-production-env.sh /home/mignon/apps/VendorDuel/deploy/deliver-notifications.sh
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+UMask=0077
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=beatmyvendor-email

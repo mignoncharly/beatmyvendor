@@ -3,9 +3,13 @@ set -euo pipefail
 
 APP_DIR=/home/mignon/apps/VendorDuel
 SERVICE_SOURCE="$APP_DIR/deploy/beatmyvendor.service"
+EMAIL_SERVICE_SOURCE="$APP_DIR/deploy/beatmyvendor-email.service"
+EMAIL_TIMER_SOURCE="$APP_DIR/deploy/beatmyvendor-email.timer"
 HTTP_SOURCE="$APP_DIR/deploy/nginx-beatmyvendor-http.conf"
 HTTPS_SOURCE="$APP_DIR/deploy/nginx-beatmyvendor-https.conf"
 SERVICE_TARGET=/etc/systemd/system/beatmyvendor.service
+EMAIL_SERVICE_TARGET=/etc/systemd/system/beatmyvendor-email.service
+EMAIL_TIMER_TARGET=/etc/systemd/system/beatmyvendor-email.timer
 NGINX_TARGET=/etc/nginx/sites-available/beatmyvendor
 NGINX_ENABLED=/etc/nginx/sites-enabled/beatmyvendor
 CERT_DIR=/etc/letsencrypt/live/beatmyvendor.com
@@ -16,18 +20,23 @@ BACKUP_DIR="$BACKUP_ROOT/$TIMESTAMP"
 
 [[ $EUID -eq 0 ]] || { echo "Run this installer with sudo." >&2; exit 1; }
 
-for required_file in "$SERVICE_SOURCE" "$HTTP_SOURCE" "$HTTPS_SOURCE"; do
+for required_file in "$SERVICE_SOURCE" "$EMAIL_SERVICE_SOURCE" "$EMAIL_TIMER_SOURCE" "$HTTP_SOURCE" "$HTTPS_SOURCE"; do
   [[ -f "$required_file" ]] || { echo "Missing deployment file: $required_file" >&2; exit 1; }
 done
 
 mkdir -p "$BACKUP_DIR" "$ACME_ROOT"
 if [[ -e "$SERVICE_TARGET" ]]; then cp -a "$SERVICE_TARGET" "$BACKUP_DIR/beatmyvendor.service"; fi
+if [[ -e "$EMAIL_SERVICE_TARGET" ]]; then cp -a "$EMAIL_SERVICE_TARGET" "$BACKUP_DIR/beatmyvendor-email.service"; fi
+if [[ -e "$EMAIL_TIMER_TARGET" ]]; then cp -a "$EMAIL_TIMER_TARGET" "$BACKUP_DIR/beatmyvendor-email.timer"; fi
 if [[ -e "$NGINX_TARGET" ]]; then cp -a "$NGINX_TARGET" "$BACKUP_DIR/nginx-beatmyvendor"; fi
 if [[ -L "$NGINX_ENABLED" ]]; then cp -a "$NGINX_ENABLED" "$BACKUP_DIR/beatmyvendor-enabled-link"; fi
 
 install -o root -g root -m 0644 "$SERVICE_SOURCE" "$SERVICE_TARGET"
+install -o root -g root -m 0644 "$EMAIL_SERVICE_SOURCE" "$EMAIL_SERVICE_TARGET"
+install -o root -g root -m 0644 "$EMAIL_TIMER_SOURCE" "$EMAIL_TIMER_TARGET"
 systemctl daemon-reload
 systemctl enable --now beatmyvendor.service
+systemctl enable --now beatmyvendor-email.timer
 
 for attempt in {1..20}; do
   if curl --fail --silent --show-error --max-time 3 http://127.0.0.1:3000/ >/dev/null; then break; fi
@@ -72,5 +81,6 @@ fi
 systemctl reload nginx
 
 systemctl --no-pager --full status beatmyvendor.service
+systemctl --no-pager --full status beatmyvendor-email.timer
 nginx -t
 echo "BeatMyVendor HTTPS installation completed. Backup: $BACKUP_DIR"

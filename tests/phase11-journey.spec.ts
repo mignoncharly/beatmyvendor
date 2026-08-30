@@ -55,8 +55,11 @@ test.describe("HTTP and indexing boundaries", () => {
 
   test("maintenance and Stripe endpoints reject unauthenticated calls", async ({ request }) => {
     const retention = await request.post("/api/maintenance/retention");
+    const notifications = await request.post("/api/maintenance/notifications");
     expect(retention.status()).toBe(401);
     await expect(retention.json()).resolves.toEqual({ error: "Unauthorized" });
+    expect(notifications.status()).toBe(401);
+    await expect(notifications.json()).resolves.toEqual({ error: "Unauthorized" });
 
     const stripe = await request.post("/api/stripe/webhook", { data: "{}" });
     expect(stripe.status()).toBe(503);
@@ -89,8 +92,10 @@ test.describe("HTTP and indexing boundaries", () => {
 
   test("unsupported methods fail closed", async ({ request }) => {
     const retention = await request.get("/api/maintenance/retention");
+    const notifications = await request.get("/api/maintenance/notifications");
     const stripe = await request.get("/api/stripe/webhook");
     expect(retention.status()).toBe(405);
+    expect(notifications.status()).toBe(405);
     expect(stripe.status()).toBe(405);
   });
 });

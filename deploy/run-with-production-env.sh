@@ -51,15 +51,24 @@ else
   STRIPE_SECRET_KEY=$(read_stripe_sandbox_setting "stripe secret key")
   export STRIPE_VENDOR_INTRODUCTION_PRICE_ID
   STRIPE_VENDOR_INTRODUCTION_PRICE_ID=$(read_stripe_sandbox_setting STRIPE_VENDOR_INTRODUCTION_PRICE_ID)
+  export RESEND_API_KEY
+  RESEND_API_KEY=$(read_setting resend_api_key)
+  export CRON_SECRET
+  CRON_SECRET=$(read_setting cron_secret)
 fi
 
 export NODE_ENV=production
 export NEXT_PUBLIC_SITE_URL=https://beatmyvendor.com
+export RESEND_FROM_EMAIL="${RESEND_FROM_EMAIL:-VendorDuel <notifications@beatmyvendor.com>}"
+export RESEND_REPLY_TO_EMAIL="${RESEND_REPLY_TO_EMAIL:-support@beatmyvendor.com}"
+export EMAIL_DELIVERY_BATCH_SIZE="${EMAIL_DELIVERY_BATCH_SIZE:-25}"
 
 : "${NEXT_PUBLIC_SUPABASE_URL:?NEXT_PUBLIC_SUPABASE_URL is required}"
 : "${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:?NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY is required}"
 : "${SUPABASE_SERVICE_ROLE_KEY:?SUPABASE_SERVICE_ROLE_KEY is required}"
 : "${STRIPE_SECRET_KEY:?STRIPE_SECRET_KEY is required}"
 : "${STRIPE_VENDOR_INTRODUCTION_PRICE_ID:?STRIPE_VENDOR_INTRODUCTION_PRICE_ID is required}"
+: "${RESEND_API_KEY:?RESEND_API_KEY is required}"
+: "${CRON_SECRET:?CRON_SECRET is required}"
 
 exec "$@"

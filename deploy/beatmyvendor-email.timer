@@ -1,0 +1,12 @@
+[Unit]
+Description=Run VendorDuel transactional email delivery every minute
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=1min
+RandomizedDelaySec=10s
+Persistent=true
+Unit=beatmyvendor-email.service
+
+[Install]
+WantedBy=timers.target

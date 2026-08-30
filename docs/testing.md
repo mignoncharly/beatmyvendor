@@ -49,3 +49,38 @@ Before launch, run a staging smoke test with real Supabase authentication,
 private verification storage, Stripe test-mode Checkout, signed webhook
 delivery, and the configured email provider. Local browser tests deliberately
 do not fabricate successful responses from these services.
+
+## Transactional email delivery
+
+Every in-app notification is fanned out to a durable email notification by the
+database. The delivery worker atomically claims due messages, renders the
+matching branded HTML and plain-text template, sends through Resend, and records
+the provider message ID. Temporary failures are retried with bounded exponential
+backoff; invalid recipients and other permanent failures are retained as failed
+notifications for operations review.
+
+Production requires these settings:
+
+    RESEND_API_KEY=re_...
+    RESEND_FROM_EMAIL="VendorDuel <notifications@beatmyvendor.com>"
+    RESEND_REPLY_TO_EMAIL=support@beatmyvendor.com
+    CRON_SECRET=a-long-random-secret
+
+The authenticated worker endpoint is:
+
+    POST /api/maintenance/notifications
+    Authorization: Bearer $CRON_SECRET
+
+The deployment includes `beatmyvendor-email.timer`, which invokes the endpoint
+once per minute. Inspect it with:
+
+    systemctl status beatmyvendor-email.timer
+    journalctl -u beatmyvendor-email.service -n 100 --no-pager
+
+For a manual production run:
+
+    deploy/run-with-production-env.sh deploy/deliver-notifications.sh
+
+Do not interpret an accepted Resend API response as inbox delivery. The stored
+provider message ID identifies the accepted request; delivery and bounce status
+remain observable in Resend.
