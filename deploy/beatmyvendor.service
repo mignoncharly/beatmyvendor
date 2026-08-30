@@ -1,5 +1,5 @@
 [Unit]
-Description=BeatMyVendor Next.js application
+Description=Beat My Vendor Next.js application
 After=network-online.target
 Wants=network-online.target
 

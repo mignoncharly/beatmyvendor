@@ -91,4 +91,4 @@ systemctl reload nginx
 systemctl --no-pager --full status beatmyvendor.service
 systemctl --no-pager --full status beatmyvendor-email.timer
 nginx -t
-echo "BeatMyVendor HTTPS installation completed. Backup: $BACKUP_DIR"
+echo "Beat My Vendor HTTPS installation completed. Backup: $BACKUP_DIR"
