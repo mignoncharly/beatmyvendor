@@ -3,6 +3,15 @@ supabase_keys.md
 .env
 .env.*
 !.env.example
+# Plaintext systemd credential source (encrypted by deploy/encrypt-credential.sh)
+beatmyvendor.env
+*.env
+# Operational secret/runbook material kept out of version control
+docs/production-secrets.md
+posthog-warehouse-report.md
+
+# Local editor / agent state
+.claude/
 
 # Supabase local state
 .supabase/

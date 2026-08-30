@@ -15,3 +15,26 @@ export const softwareCatalog: Software[] = [
 
 export const getSoftware = (slug: string) => softwareCatalog.find((product) => product.slug === slug);
 export const alternativesTo = (slug: string) => softwareCatalog.filter((product) => product.slug !== slug);
+
+export const comparisonPairs = softwareCatalog.flatMap((first, firstIndex) =>
+  softwareCatalog.slice(firstIndex + 1).map((second) => ({
+    first,
+    second,
+    pair: `${first.slug}-vs-${second.slug}`
+  }))
+);
+
+export function comparisonFromPair(pair: string) {
+  for (const first of softwareCatalog) {
+    const marker = `${first.slug}-vs-`;
+    if (!pair.startsWith(marker)) continue;
+    const second = getSoftware(pair.slice(marker.length));
+    if (!second || second.slug === first.slug) return null;
+    const firstIndex = softwareCatalog.findIndex((product) => product.slug === first.slug);
+    const secondIndex = softwareCatalog.findIndex((product) => product.slug === second.slug);
+    return firstIndex < secondIndex
+      ? { first, second, canonicalPair: pair, isCanonical: true }
+      : { first: second, second: first, canonicalPair: `${second.slug}-vs-${first.slug}`, isCanonical: false };
+  }
+  return null;
+}

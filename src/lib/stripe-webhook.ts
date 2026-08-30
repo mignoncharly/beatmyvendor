@@ -36,3 +36,20 @@ export function decideCheckoutEvent(event: Stripe.Event): CheckoutEventDecision 
     shouldRetrieveReceipt: Boolean(paymentIntentId) && ["checkout.session.completed", "checkout.session.async_payment_succeeded"].includes(eventType)
   };
 }
+
+export const supportedRefundEvents = ["charge.refunded"] as const;
+
+export type RefundEventDecision =
+  | { kind: "ignore" }
+  | { kind: "reject"; message: string }
+  | { kind: "refund"; eventType: string; paymentIntentId: string; refundId: string };
+
+export function decideRefundEvent(event: Stripe.Event): RefundEventDecision {
+  if (!supportedRefundEvents.includes(event.type as (typeof supportedRefundEvents)[number])) return { kind: "ignore" };
+  const charge = event.data.object as Stripe.Charge;
+  if (!charge.refunded) return { kind: "ignore" };
+  const paymentIntentId = typeof charge.payment_intent === "string" ? charge.payment_intent : charge.payment_intent?.id ?? "";
+  if (!paymentIntentId) return { kind: "reject", message: "Refund event is missing a payment intent." };
+  const refundId = charge.refunds?.data?.[0]?.id ?? "";
+  return { kind: "refund", eventType: event.type, paymentIntentId, refundId };
+}

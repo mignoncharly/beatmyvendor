@@ -10,6 +10,7 @@ Group=mignon
 WorkingDirectory=/home/mignon/apps/VendorDuel
 Environment=NODE_ENV=production
 Environment=PATH=/home/mignon/.nvm/versions/node/v22.23.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+LoadCredentialEncrypted=beatmyvendor.env:/etc/credstore.encrypted/beatmyvendor.env
 ExecStart=/home/mignon/apps/VendorDuel/deploy/run-with-production-env.sh /home/mignon/.nvm/versions/node/v22.23.2/bin/node /home/mignon/apps/VendorDuel/node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3000
 Restart=always
 RestartSec=5

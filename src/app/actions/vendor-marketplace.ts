@@ -1,10 +1,12 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireOrganization } from "@/lib/auth";
 import type { ActionState } from "@/lib/forms";
+import { withinRateLimit } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
 const optionalPositiveInteger = z.preprocess((value) => value === "" || value == null ? null : value, z.coerce.number().int().positive().nullable());
@@ -15,16 +17,36 @@ const profileSchema = z.object({
   companySize: z.string().trim().min(1), description: z.string().trim().min(20, "Add at least 20 characters about your product.").max(1500),
   minimumCustomerSize: optionalPositiveInteger, maximumCustomerSize: optionalPositiveInteger,
   countriesServed: z.string().max(500), currencies: z.string().max(200), contactName: z.string().trim().min(2).max(120),
+  contactEmail: z.union([z.literal(""), z.string().trim().email("Enter a valid contact email.").max(254)]),
   softwareProductId: z.string().uuid("Choose your product."), productName: z.string().trim().min(2).max(160),
   productUrl: z.string().trim().url("Enter a valid product URL.")
 });
+
+const logoTypes: Record<string, string> = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp" };
+
+export async function uploadVendorLogo(formData: FormData) {
+  const { organization } = await requireOrganization("vendor");
+  if (!(["owner", "admin"] as string[]).includes(organization.membershipRole)) redirect("/vendor/profile?error=permission");
+  const file = formData.get("logo");
+  if (!(file instanceof File) || file.size === 0) redirect("/vendor/profile?error=logo-missing");
+  const extension = logoTypes[file.type];
+  if (!extension || file.size > 2 * 1024 * 1024) redirect("/vendor/profile?error=logo-type");
+  const path = `${organization.organizationId}/logo-${randomUUID()}.${extension}`;
+  const supabase = await createClient();
+  const { error: uploadError } = await supabase.storage.from("vendor-logos").upload(path, file, { contentType: file.type, upsert: true });
+  if (uploadError) redirect("/vendor/profile?error=logo-upload");
+  const { error } = await supabase.rpc("set_vendor_logo", { p_vendor_organization_id: organization.organizationId, p_logo_path: path });
+  if (error) redirect("/vendor/profile?error=logo-save");
+  revalidatePath("/vendor/profile"); revalidatePath("/vendor");
+  redirect("/vendor/profile?logo=updated");
+}
 
 function codes(value: string, length: number) { return [...new Set(value.split(/[,\s]+/).map((code) => code.trim().toUpperCase()).filter((code) => code.length === length))]; }
 
 export async function saveVendorProfile(_state: ActionState, formData: FormData): Promise<ActionState> {
   const { organization } = await requireOrganization("vendor");
   if (!(["owner", "admin"] as string[]).includes(organization.membershipRole)) return { error: "Only workspace owners and admins can edit the marketplace profile." };
-  const parsed = profileSchema.safeParse(Object.fromEntries(["websiteUrl","countryCode","companySize","description","minimumCustomerSize","maximumCustomerSize","countriesServed","currencies","contactName","softwareProductId","productName","productUrl"].map((key) => [key, formData.get(key) ?? ""])));
+  const parsed = profileSchema.safeParse(Object.fromEntries(["websiteUrl","countryCode","companySize","description","minimumCustomerSize","maximumCustomerSize","countriesServed","currencies","contactName","contactEmail","softwareProductId","productName","productUrl"].map((key) => [key, formData.get(key) ?? ""])));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Check the company profile." };
   if (parsed.data.minimumCustomerSize && parsed.data.maximumCustomerSize && parsed.data.maximumCustomerSize < parsed.data.minimumCustomerSize) return { error: "Maximum customer size must be at least the minimum." };
   const replacements = formData.getAll("replacementIds").map(String).filter((value) => z.string().uuid().safeParse(value).success);
@@ -36,7 +58,7 @@ export async function saveVendorProfile(_state: ActionState, formData: FormData)
     p_minimum_customer_size: parsed.data.minimumCustomerSize, p_maximum_customer_size: parsed.data.maximumCustomerSize,
     p_countries_served: codes(parsed.data.countriesServed, 2), p_currencies: codes(parsed.data.currencies, 3),
     p_migration_support: formData.get("migrationSupport") === "on", p_contact_name: parsed.data.contactName,
-    p_software_product_id: parsed.data.softwareProductId, p_product_name: parsed.data.productName,
+    p_contact_email: parsed.data.contactEmail, p_software_product_id: parsed.data.softwareProductId, p_product_name: parsed.data.productName,
     p_product_url: parsed.data.productUrl, p_replaces_software_product_ids: replacements
   });
   if (error) return { error: "We could not save the marketplace profile. Check that every replacement is a direct competitor." };
@@ -55,6 +77,7 @@ const offerSchema = z.object({
 export async function saveVendorOffer(_state: ActionState, formData: FormData): Promise<ActionState> {
   const { organization } = await requireOrganization("vendor");
   if (organization.vendorApproval !== "approved") return { error: "Your vendor workspace must be approved before submitting challenges." };
+  if (!(await withinRateLimit("save-offer", organization.organizationId, 40, 3600))) return { error: "You are submitting challenges very frequently. Please wait a moment and try again." };
   const parsed = offerSchema.safeParse({
     offerId: formData.get("offerId"), duelId: formData.get("duelId"), vendorProductId: formData.get("vendorProductId"), planName: formData.get("planName"),
     annualPrice: formData.get("annualPrice"), currency: formData.get("currency"), seatsIncluded: formData.get("seatsIncluded"),

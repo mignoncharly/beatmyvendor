@@ -4,10 +4,14 @@ import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { duelRequirementsDisclosureError } from "@/lib/anonymity";
 import { requireOrganization } from "@/lib/auth";
 import type { ActionState } from "@/lib/forms";
+import { isIsoCountry, isSupportedCurrency } from "@/lib/iso";
+import { reportError } from "@/lib/observability";
+import { withinRateLimit } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
-import { safeFilename, verificationDocumentError } from "@/lib/verification-document";
+import { inspectVerificationDocument, safeFilename, type VerificationDocumentType } from "@/lib/verification-document";
 
 const optionalInteger = z.preprocess(
   (value) => value === "" || value == null ? null : value,
@@ -26,13 +30,13 @@ const duelSchema = z.object({
   currentPlan: z.string().trim().max(120),
   currentPrice: z.coerce.number().positive("Enter a price greater than zero."),
   billingFrequency: z.enum(["monthly", "annual"]),
-  currency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/, "Use a three-letter currency code."),
+  currency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/, "Use a three-letter currency code.").refine(isSupportedCurrency, "Use a currency the marketplace supports."),
   seats: z.coerce.number().int().positive("Enter at least one seat."),
   ticketVolume: optionalInteger,
   currentFees: z.coerce.number().nonnegative("Fees cannot be negative."),
   renewalDate: z.string().trim(),
   contractMonths: optionalPositiveInteger,
-  countryCode: z.string().trim().toUpperCase().regex(/^[A-Z]{2}$/, "Use a two-letter country code."),
+  countryCode: z.string().trim().toUpperCase().regex(/^[A-Z]{2}$/, "Use a two-letter country code.").refine(isIsoCountry, "Use a valid ISO country code."),
   companySize: z.string().trim().min(1, "Choose a company size.").max(80),
   switchingTimeline: z.string().trim().max(120),
   buyerIntent: z.enum(["checking_market", "good_offer", "actively_looking", "must_switch_before_renewal"]),
@@ -53,6 +57,7 @@ function requirementLines(value: string, kind: "feature" | "integration") {
 
 export async function saveBuyerDuel(_state: ActionState, formData: FormData): Promise<ActionState> {
   const { identity, organization } = await requireOrganization("buyer");
+  if (!(await withinRateLimit("save-duel", organization.organizationId, 30, 3600))) return { error: "You are editing duels very frequently. Please wait a moment and try again." };
   const parsed = duelSchema.safeParse({
     duelId: formData.get("duelId"),
     categoryId: formData.get("categoryId"),
@@ -88,12 +93,19 @@ export async function saveBuyerDuel(_state: ActionState, formData: FormData): Pr
   ];
   if (parsed.data.intent === "submit" && requirements.length === 0) return { error: "Add at least one feature or integration before submitting." };
   if (requirements.some((requirement) => requirement.label.length > 120)) return { error: "Each requirement must be 120 characters or fewer." };
+  const disclosureError = duelRequirementsDisclosureError(
+    requirements.map((requirement) => requirement.label),
+    [organization.name, identity.displayName ?? "", identity.email.split("@")[1] ?? ""]
+  );
+  if (disclosureError) return { error: disclosureError };
 
   const document = formData.get("spendDocument");
   const file = document instanceof File && document.size > 0 ? document : null;
-  const documentError = verificationDocumentError(file);
-  if (documentError) {
-    return { error: documentError };
+  let documentType: VerificationDocumentType | null = null;
+  if (file) {
+    const inspection = await inspectVerificationDocument(file);
+    if ("error" in inspection) return { error: inspection.error };
+    documentType = inspection.type;
   }
 
   const supabase = await createClient();
@@ -121,27 +133,29 @@ export async function saveBuyerDuel(_state: ActionState, formData: FormData): Pr
     p_submit: parsed.data.intent === "submit"
   });
   if (error || typeof duelId !== "string") {
+    if (error?.message.includes("contact or company details")) return { error: "Remove contact and company details from vendor-visible requirements." };
     return { error: error?.message.includes("no longer be edited") ? "This duel can no longer be edited." : "We could not save the duel. Please review the details and try again." };
   }
 
-  if (file) {
+  if (file && documentType) {
     const storagePath = `${organization.organizationId}/${duelId}/${randomUUID()}-${safeFilename(file.name)}`;
     const { error: uploadError } = await supabase.storage.from("duel-verifications").upload(storagePath, file, {
-      contentType: file.type,
+      contentType: documentType,
       upsert: false
     });
-    if (uploadError) return { error: "The duel was saved, but the spend document could not be uploaded. You can retry from the duel page." };
+    if (uploadError) { reportError("duel.document.upload", uploadError, { duel_id: duelId }); return { error: "The duel was saved, but the spend document could not be uploaded. You can retry from the duel page." }; }
 
     const { error: metadataError } = await supabase.from("duel_documents").insert({
       duel_id: duelId,
       uploaded_by: identity.id,
       storage_path: storagePath,
       original_filename: file.name.slice(0, 255),
-      mime_type: file.type,
+      mime_type: documentType,
       size_bytes: file.size
     });
     if (metadataError) {
       await supabase.storage.from("duel-verifications").remove([storagePath]);
+      reportError("duel.document.metadata", metadataError, { duel_id: duelId });
       return { error: "The duel was saved, but the spend document could not be registered. Please retry." };
     }
 

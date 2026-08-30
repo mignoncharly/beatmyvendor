@@ -21,27 +21,36 @@ public acquisition journey, form constraints, catalog navigation, baseline
 security headers, protected operational endpoints, and search-indexing
 boundaries.
 
-## Database integration journey
+## Database integration journey (release gate)
 
-The rollback-only journey in `supabase/tests/marketplace_security.sql` is for a
-disposable local Supabase database with all migrations applied. It verifies:
+The rollback-only journey in `supabase/tests/marketplace_security.sql` runs
+against a database with all migrations applied. It verifies:
 
 - Buyer A can read its Duel while Buyer B cannot.
-- A vendor cannot read buyer identity before a paid introduction.
-- A submitted offer is immutable.
-- Failed and expired Stripe checkouts leave the introduction locked.
-- A failed payment queues the vendor notification.
-- A fresh checkout can succeed after earlier failures.
-- Replaying the same Stripe event is idempotent.
-- Buyer identity becomes visible to the selected vendor only after payment.
+- Direct writes to users / buyer_profiles / offers / requirements / deal_outcomes
+  are revoked; the contact/company disclosure detector rejects identity.
+- A submitted offer is immutable; its version snapshot captures the coverage matrix.
+- Failed and expired Stripe checkouts leave the introduction locked; a failed
+  payment queues the vendor notification; a fresh checkout can succeed afterward.
+- Replaying the same Stripe event is idempotent (checkout and refund).
+- Buyer identity is hidden before payment, revealed to the selected vendor after
+  payment, and revoked again after a refund.
+- Recurring fees fold into annual spend; a material spend edit invalidates the
+  spend verification; an expired offer cannot be selected.
+- The rate limiter, matching, and admin-evidence functions have correct
+  privileges; opportunity matching is gated to approved members.
 
-Run it only against a disposable local database:
+Run it through the release gate (skips cleanly when no database is provided):
 
-    psql "$LOCAL_DATABASE_URL" --set ON_ERROR_STOP=1 \
-      --file supabase/tests/marketplace_security.sql
+    QUALIFY_DATABASE_URL="postgresql://…disposable-or-staging…" npm run test:sql
+
+    # or the combined gate:
+    QUALIFY_DATABASE_URL="postgresql://…" npm run qualify        # check + SQL
+    QUALIFY_DATABASE_URL="postgresql://…" npm run qualify:full   # + Playwright
 
 The script wraps all fixtures and assertions in a transaction and always ends
-with `rollback`.
+with `rollback`, so it is non-destructive. See `docs/production-qualification.md`
+for the full release gate and the manual production-configuration checklist.
 
 ## External-service scenarios
 
@@ -63,7 +72,7 @@ Production requires these settings:
 
     RESEND_API_KEY=re_...
     RESEND_FROM_EMAIL="BeatMyVendor <notifications@beatmyvendor.com>"
-    RESEND_REPLY_TO_EMAIL=support@beatmyvendor.com
+    RESEND_REPLY_TO_EMAIL=hello@beatmyvendor.com
     CRON_SECRET=a-long-random-secret
 
 The authenticated worker endpoint is:

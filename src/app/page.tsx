@@ -1,4 +1,8 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { defaultDescription, publicMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = publicMetadata({ title: "BeatMyVendor — Make software vendors compete", description: defaultDescription, path: "/" });
 
 export default function Home() {
   return (

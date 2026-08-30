@@ -89,8 +89,8 @@ export function DuelForm({ categories, products, initial = {} }: {
       <fieldset>
         <legend><span>03</span> Requirements & verification</legend>
         <div className="field-grid">
-          <label className="field"><span>Required features — one per line</span><textarea name="featureRequirements" rows={6} defaultValue={initial.featureRequirements ?? ""} placeholder={"Knowledge base\nLive chat\nSLA reporting"} /></label>
-          <label className="field"><span>Required integrations — one per line</span><textarea name="integrationRequirements" rows={6} defaultValue={initial.integrationRequirements ?? ""} placeholder={"Salesforce\nSlack\nSegment"} /></label>
+          <label className="field"><span>Required features — one per line</span><textarea name="featureRequirements" rows={6} defaultValue={initial.featureRequirements ?? ""} placeholder={"Knowledge base\nLive chat\nSLA reporting"} /><small>Do not include names, company details, email addresses, phone numbers, domains, URLs, or social profiles.</small></label>
+          <label className="field"><span>Required integrations — one per line</span><textarea name="integrationRequirements" rows={6} defaultValue={initial.integrationRequirements ?? ""} placeholder={"Salesforce\nSlack\nSegment"} /><small>Vendor-visible before introduction. Keep every line anonymous.</small></label>
           <label className="field"><span>Offer deadline</span><input name="submissionDeadline" type="datetime-local" defaultValue={localDateTime(initial.submissionDeadline)} required /></label>
           <label className="field"><span>Spend proof (private, optional)</span><input name="spendDocument" type="file" accept="application/pdf,image/jpeg,image/png,image/webp" /><small>Invoice or contract, up to 10 MB. Visible only to your workspace and admins.</small></label>
           <label className="field field-wide"><span>Private context for BeatMyVendor</span><textarea name="privateComment" rows={4} maxLength={2000} defaultValue={initial.privateComment ?? ""} placeholder="What should our verification team know?" /></label>

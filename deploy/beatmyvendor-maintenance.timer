@@ -1,0 +1,12 @@
+[Unit]
+Description=Run BeatMyVendor marketplace maintenance every five minutes
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=5min
+RandomizedDelaySec=30s
+Persistent=true
+Unit=beatmyvendor-maintenance.service
+
+[Install]
+WantedBy=timers.target

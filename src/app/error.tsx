@@ -6,6 +6,9 @@ import Link from "next/link";
 export default function ErrorPage({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
   useEffect(() => {
     console.error(error);
+    try {
+      fetch("/api/observability/client-error", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ message: error.message, digest: error.digest, path: window.location.pathname }), keepalive: true }).catch(() => {});
+    } catch { /* best-effort */ }
   }, [error]);
 
   return (

@@ -30,6 +30,10 @@ export const emailTemplateKeys = [
 const duelPath = (fallback: string) => (payload: Payload) =>
   typeof payload.duel_id === "string" ? "/buyer/duels/" + payload.duel_id : fallback;
 
+// The introduction email is sent to both parties; each gets their own workspace.
+const introductionPath = (payload: Payload) =>
+  payload.role === "vendor" ? "/vendor/introductions" : "/buyer/introductions";
+
 const templates: Record<string, Copy> = {
   email_verification: {
     subject: "Your secure BeatMyVendor sign-in link",
@@ -106,7 +110,7 @@ const templates: Record<string, Copy> = {
     summary: "Stripe confirmed the introduction payment and the selected buyer and vendor can now contact one another directly.",
     detail: "Open the introduction to see the verified contact details and continue the commercial conversation outside the sealed marketplace.",
     cta: "Open the introduction",
-    path: "/buyer/introductions",
+    path: introductionPath,
     tone: "success"
   },
   deal_confirmation: {

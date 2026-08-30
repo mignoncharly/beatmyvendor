@@ -8,7 +8,7 @@ function toSlug(value: string) {
   return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-export function OnboardingForm({ initialKind }: { initialKind: "buyer" | "vendor" }) {
+export function OnboardingForm({ initialKind, next }: { initialKind: "buyer" | "vendor"; next?: string }) {
   const [kind, setKind] = useState(initialKind);
   const [name, setName] = useState("");
   const [customSlug, setCustomSlug] = useState("");
@@ -18,6 +18,7 @@ export function OnboardingForm({ initialKind }: { initialKind: "buyer" | "vendor
   return (
     <form action={action} className="form-stack onboarding-form">
       <input type="hidden" name="kind" value={kind} />
+      {next && <input type="hidden" name="next" value={next} />}
       <div className="role-switch" role="group" aria-label="Choose workspace type">
         <button type="button" aria-pressed={kind === "buyer"} className={kind === "buyer" ? "active" : ""} onClick={() => setKind("buyer")}>
           <strong>I buy software</strong><span>Start duels and compare offers</span>

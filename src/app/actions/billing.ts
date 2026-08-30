@@ -2,12 +2,14 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireOrganization } from "@/lib/auth";
+import { withinRateLimit } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import { getStripe, stripePriceId } from "@/lib/stripe";
 
 export async function startIntroductionCheckout(formData: FormData) {
   const { identity, organization } = await requireOrganization("vendor");
   if (organization.vendorApproval !== "approved") redirect("/vendor?billing=approval-required");
+  if (!(await withinRateLimit("checkout", organization.organizationId, 12, 3600))) redirect("/vendor/billing?error=rate-limited");
   const selectionId = z.string().uuid().parse(formData.get("selectionId")); const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
   if (!siteUrl) redirect("/vendor/billing?error=configuration");
   const supabase = await createClient();

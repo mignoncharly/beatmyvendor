@@ -23,7 +23,7 @@ export async function selectBuyerOffer(formData: FormData) {
   const duelId = idSchema.parse(formData.get("duelId")); const offerId = idSchema.parse(formData.get("offerId"));
   const supabase = await createClient();
   const { error } = await supabase.rpc("select_buyer_offer", { p_duel_id: duelId, p_offer_id: offerId });
-  if (error) redirect(`/buyer/duels/${duelId}/compare?error=selection`);
+  if (error) redirect(`/buyer/duels/${duelId}/compare?error=${error.message.includes("expired") ? "stale" : "selection"}`);
   revalidatePath("/buyer"); revalidatePath("/buyer/offers"); revalidatePath(`/buyer/duels/${duelId}`); revalidatePath(`/buyer/duels/${duelId}/compare`);
   redirect(`/buyer/duels/${duelId}/compare?selected=${offerId}`);
 }

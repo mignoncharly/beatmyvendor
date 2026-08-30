@@ -6,9 +6,12 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { renderBrandedEmail } from "@/lib/email-templates";
 import type { ActionState } from "@/lib/forms";
+import { clientIp, withinRateLimit } from "@/lib/rate-limit";
 import { sendResendEmail } from "@/lib/resend";
+import { safeRelativePath } from "@/lib/site";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 const emailSchema = z.string().trim().email("Enter a valid work email.").max(254);
 
@@ -19,13 +22,19 @@ export async function requestMagicLink(
   const parsed = emailSchema.safeParse(formData.get("email"));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
 
+  const ip = await clientIp();
+  if (!(await withinRateLimit("magiclink-ip", ip, 8, 900))) return { error: "Too many sign-in attempts. Please wait a few minutes and try again." };
+  if (!(await withinRateLimit("magiclink-email", parsed.data.toLowerCase(), 4, 3600))) return { error: "Too many sign-in attempts for this email. Please wait before trying again." };
+  if (!(await verifyTurnstile(formData.get("cf-turnstile-response"), ip))) return { error: "Please complete the verification challenge and try again." };
+
   const requestHeaders = await headers();
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? requestHeaders.get("origin") ?? "http://localhost:3000";
   const emailAddress = parsed.data.toLowerCase();
 
   try {
     const callbackUrl = new URL("/auth/callback", origin);
-    callbackUrl.searchParams.set("next", "/onboarding");
+    const nextPath = safeRelativePath(formData.get("next") as string | null, "/onboarding");
+    callbackUrl.searchParams.set("next", nextPath);
     const supabase = createAdminClient();
     const { data, error } = await supabase.auth.admin.generateLink({
       type: "magiclink",

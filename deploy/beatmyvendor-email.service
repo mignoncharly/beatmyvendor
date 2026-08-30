@@ -9,6 +9,7 @@ User=mignon
 Group=mignon
 WorkingDirectory=/home/mignon/apps/VendorDuel
 Environment=PATH=/home/mignon/.nvm/versions/node/v22.23.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+LoadCredentialEncrypted=beatmyvendor.env:/etc/credstore.encrypted/beatmyvendor.env
 ExecStart=/home/mignon/apps/VendorDuel/deploy/run-with-production-env.sh /home/mignon/apps/VendorDuel/deploy/deliver-notifications.sh
 NoNewPrivileges=true
 PrivateTmp=true

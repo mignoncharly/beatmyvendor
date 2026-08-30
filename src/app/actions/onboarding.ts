@@ -5,6 +5,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getIdentity } from "@/lib/auth";
 import type { ActionState } from "@/lib/forms";
+import { safeRelativePath } from "@/lib/site";
 
 const schema = z.object({
   kind: z.enum(["buyer", "vendor"]),
@@ -27,8 +28,9 @@ export async function onboardOrganization(
     contactName: formData.get("contactName")
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
+  const next = safeRelativePath(formData.get("next") as string | null, "");
   if (identity.organizations.some((organization) => organization.kind === parsed.data.kind)) {
-    redirect(`/${parsed.data.kind}`);
+    redirect(next || `/${parsed.data.kind}`);
   }
 
   const supabase = await createClient();
@@ -42,5 +44,5 @@ export async function onboardOrganization(
     if (error.code === "23505") return { error: "That workspace URL is already taken." };
     return { error: "We could not create the workspace. Please try again." };
   }
-  redirect(`/${parsed.data.kind}`);
+  redirect(next || `/${parsed.data.kind}`);
 }

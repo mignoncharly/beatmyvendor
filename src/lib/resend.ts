@@ -27,7 +27,7 @@ function sender() {
 }
 
 function replyTo() {
-  return process.env.RESEND_REPLY_TO_EMAIL?.trim() || "support@beatmyvendor.com";
+  return process.env.RESEND_REPLY_TO_EMAIL?.trim() || "hello@beatmyvendor.com";
 }
 
 export async function sendResendEmail(input: SendEmailInput, fetcher: typeof fetch = fetch) {

@@ -10,7 +10,7 @@ beforeEach(async () => {
   vi.resetModules();
   process.env.RESEND_API_KEY = "re_test_key";
   process.env.RESEND_FROM_EMAIL = "BeatMyVendor <notifications@beatmyvendor.com>";
-  process.env.RESEND_REPLY_TO_EMAIL = "support@beatmyvendor.com";
+  process.env.RESEND_REPLY_TO_EMAIL = "hello@beatmyvendor.com";
   ({ EmailProviderError, resendConfigured, sendResendEmail } = await import("./resend"));
 });
 
@@ -48,7 +48,7 @@ describe("sendResendEmail", () => {
     expect(JSON.parse(String(request?.body))).toMatchObject({
       from: "BeatMyVendor <notifications@beatmyvendor.com>",
       to: ["buyer@example.com"],
-      reply_to: "support@beatmyvendor.com",
+      reply_to: "hello@beatmyvendor.com",
       subject: input.subject,
       html: input.html,
       text: input.text,

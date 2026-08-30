@@ -4,7 +4,7 @@ import { saveVendorProfile } from "@/app/actions/vendor-marketplace";
 import { SubmitButton } from "@/components/submit-button";
 
 type Product = { id: string; name: string; category_id: string };
-type Initial = { websiteUrl?: string | null; countryCode?: string | null; companySize?: string | null; description?: string | null; minimumCustomerSize?: number | null; maximumCustomerSize?: number | null; countriesServed?: string[]; currencies?: string[]; migrationSupport?: boolean; contactName?: string | null };
+type Initial = { websiteUrl?: string | null; countryCode?: string | null; companySize?: string | null; description?: string | null; minimumCustomerSize?: number | null; maximumCustomerSize?: number | null; countriesServed?: string[]; currencies?: string[]; migrationSupport?: boolean; contactName?: string | null; contactEmail?: string | null };
 
 export function VendorProfileForm({ products, initial }: { products: Product[]; initial: Initial }) {
   const [state, action] = useActionState(saveVendorProfile, {}); const [productId, setProductId] = useState(products[0]?.id ?? "");
@@ -14,6 +14,7 @@ export function VendorProfileForm({ products, initial }: { products: Product[]; 
       <label className="field field-wide"><span>Description</span><textarea name="description" rows={5} defaultValue={initial.description ?? ""} required /></label>
       <label className="field"><span>Website</span><input name="websiteUrl" type="url" defaultValue={initial.websiteUrl ?? ""} required /></label>
       <label className="field"><span>Contact name</span><input name="contactName" defaultValue={initial.contactName ?? ""} required /></label>
+      <label className="field"><span>Contact email</span><input name="contactEmail" type="email" defaultValue={initial.contactEmail ?? ""} placeholder="sales@company.com" /></label>
       <label className="field"><span>HQ country</span><input name="countryCode" defaultValue={initial.countryCode ?? "US"} minLength={2} maxLength={2} required /></label>
       <label className="field"><span>Company size</span><select name="companySize" defaultValue={initial.companySize ?? "11-50"}><option>1-10</option><option>11-50</option><option>51-200</option><option>201-500</option><option>501-1000</option><option>1000+</option></select></label>
       <label className="field"><span>Minimum customer seats</span><input name="minimumCustomerSize" type="number" min="1" defaultValue={initial.minimumCustomerSize ?? ""} /></label>

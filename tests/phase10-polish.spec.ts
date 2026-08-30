@@ -97,3 +97,44 @@ test("site metadata exposes branded icons and social previews", async ({ page, r
     expect(response.headers()["content-type"]).toContain("image/png");
   }
 });
+
+test("PWA install promotion waits, dismisses, and returns after refresh", async ({ page }) => {
+  const makeInstallAvailable = () => page.evaluate(() => {
+    const event = new Event("beforeinstallprompt", { cancelable: true });
+    Object.defineProperties(event, {
+      prompt: { value: async () => { (window as Window & { __installPrompted?: boolean }).__installPrompted = true; } },
+      userChoice: { value: Promise.resolve({ outcome: "dismissed", platform: "web" }) }
+    });
+    window.dispatchEvent(event);
+  });
+
+  await page.clock.install({ time: 100_000 });
+  await page.goto("/");
+  await page.waitForFunction(() => document.documentElement.dataset.pwaInstallReady === "true");
+  const currentTime = await page.evaluate(() => Date.now());
+  await page.clock.pauseAt(currentTime + 1_000);
+  await makeInstallAvailable();
+  const promotion = page.getByRole("dialog", { name: "Keep BeatMyVendor close." });
+  await expect(promotion).toBeHidden();
+  await page.clock.runFor(10_000);
+  await expect(promotion).toBeVisible();
+  await page.getByRole("button", { name: "Close install prompt" }).click();
+  await expect(promotion).toBeHidden();
+
+  await page.reload();
+  await page.waitForFunction(() => document.documentElement.dataset.pwaInstallReady === "true");
+  await makeInstallAvailable();
+  await page.clock.runFor(10_000);
+  await expect(promotion).toBeVisible();
+  await page.getByRole("button", { name: "Install BeatMyVendor" }).click();
+  await expect.poll(() => page.evaluate(() => Boolean((window as Window & { __installPrompted?: boolean }).__installPrompted))).toBe(true);
+  await expect(promotion).toBeHidden();
+
+  await page.reload();
+  await page.waitForFunction(() => document.documentElement.dataset.pwaInstallReady === "true");
+  await makeInstallAvailable();
+  await page.clock.runFor(10_000);
+  await expect(promotion).toBeVisible();
+  await page.evaluate(() => window.dispatchEvent(new Event("appinstalled")));
+  await expect(promotion).toBeHidden();
+});
