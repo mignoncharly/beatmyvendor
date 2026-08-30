@@ -36,7 +36,7 @@ export function OnboardingForm({ initialKind }: { initialKind: "buyer" | "vendor
       </label>
       <label className="field">
         <span>Workspace URL</span>
-        <div className="slug-input"><span>vendorduel.com/</span><input name="slug" value={slug} onChange={(event) => setCustomSlug(toSlug(event.target.value))} required /></div>
+        <div className="slug-input"><span>beatmyvendor.com/</span><input name="slug" value={slug} onChange={(event) => setCustomSlug(toSlug(event.target.value))} required /></div>
       </label>
       {state.error && <p className="form-error" role="alert">{state.error}</p>}
       <SubmitButton pendingText="Creating workspace…">Create {kind} workspace</SubmitButton>

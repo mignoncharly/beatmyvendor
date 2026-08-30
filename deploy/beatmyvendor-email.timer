@@ -1,5 +1,5 @@
 [Unit]
-Description=Run VendorDuel transactional email delivery every minute
+Description=Run BeatMyyVendor transactional email delivery every minute
 
 [Timer]
 OnBootSec=2min

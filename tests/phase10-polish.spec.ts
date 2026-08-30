@@ -82,7 +82,7 @@ test("unsupported API methods return 405", async ({ request }) => {
 
 test("site metadata exposes branded icons and social previews", async ({ page, request }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle(/VendorDuel/);
+  await expect(page).toHaveTitle(/BeatMyyVendor/);
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /Tell us what you use/i);
   await expect(page.locator('meta[property="og:image"]')).toHaveCount(1);
   await expect(page.locator('meta[name="twitter:image"]')).toHaveCount(1);

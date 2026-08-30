@@ -20,5 +20,5 @@ export async function GET(){
     supabase.from("reports").select("id,duel_id,vendor_organization_id,reason,details,status,created_at,resolved_at").eq("reporter_user_id",userId)
   ]):[...Array(7)].map(()=>({data:[]}));
   const body=JSON.stringify({exported_at:new Date().toISOString(),policy_version:"2026-08-29",account:user,workspaces:memberships||[],duels:duels.data||[],offers:offers.data||[],introductions:introductions.data||[],payments:payments.data||[],consents:consents.data||[],data_requests:requests.data||[],reports:reports.data||[]},null,2);
-  return new Response(body,{headers:{"Content-Type":"application/json; charset=utf-8","Content-Disposition":`attachment; filename="vendorduel-data-${new Date().toISOString().slice(0,10)}.json"`,"Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff"}});
+  return new Response(body,{headers:{"Content-Type":"application/json; charset=utf-8","Content-Disposition":`attachment; filename="beatmyyvendor-data-${new Date().toISOString().slice(0,10)}.json"`,"Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff"}});
 }

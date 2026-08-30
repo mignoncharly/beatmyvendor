@@ -32,6 +32,6 @@ export default async function BuyerPage() {
         <div className="duel-spend"><strong>{new Intl.NumberFormat("en", { style: "currency", currency: duel.currency, maximumFractionDigits: 0 }).format(Number(duel.annual_spend))}</strong><span>annual spend</span></div>
         <span className={`badge badge-${duel.status}`}>{statusLabels[duel.status] ?? duel.status}</span><span aria-hidden="true">→</span>
       </Link>;
-    })}</div> : <div className="empty-panel"><span className="panel-number">01</span><h2>Your first duel starts here.</h2><p>Share your current software, spend, and must-haves. VendorDuel verifies the opportunity before qualified alternatives compete.</p><Link className="button button-primary" href="/buyer/duels/new">Start a Duel</Link></div>}
+    })}</div> : <div className="empty-panel"><span className="panel-number">01</span><h2>Your first duel starts here.</h2><p>Share your current software, spend, and must-haves. BeatMyyVendor verifies the opportunity before qualified alternatives compete.</p><Link className="button button-primary" href="/buyer/duels/new">Start a Duel</Link></div>}
   </DashboardShell>;
 }

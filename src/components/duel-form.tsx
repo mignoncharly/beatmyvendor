@@ -93,7 +93,7 @@ export function DuelForm({ categories, products, initial = {} }: {
           <label className="field"><span>Required integrations — one per line</span><textarea name="integrationRequirements" rows={6} defaultValue={initial.integrationRequirements ?? ""} placeholder={"Salesforce\nSlack\nSegment"} /></label>
           <label className="field"><span>Offer deadline</span><input name="submissionDeadline" type="datetime-local" defaultValue={localDateTime(initial.submissionDeadline)} required /></label>
           <label className="field"><span>Spend proof (private, optional)</span><input name="spendDocument" type="file" accept="application/pdf,image/jpeg,image/png,image/webp" /><small>Invoice or contract, up to 10 MB. Visible only to your workspace and admins.</small></label>
-          <label className="field field-wide"><span>Private context for VendorDuel</span><textarea name="privateComment" rows={4} maxLength={2000} defaultValue={initial.privateComment ?? ""} placeholder="What should our verification team know?" /></label>
+          <label className="field field-wide"><span>Private context for BeatMyyVendor</span><textarea name="privateComment" rows={4} maxLength={2000} defaultValue={initial.privateComment ?? ""} placeholder="What should our verification team know?" /></label>
         </div>
       </fieldset>
       {state.error && <p className="form-error" role="alert">{state.error}</p>}

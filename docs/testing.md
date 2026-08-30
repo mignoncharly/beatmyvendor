@@ -1,4 +1,4 @@
-# VendorDuel testing
+# BeatMyyVendor testing
 
 ## Local checks
 
@@ -62,7 +62,7 @@ notifications for operations review.
 Production requires these settings:
 
     RESEND_API_KEY=re_...
-    RESEND_FROM_EMAIL="VendorDuel <notifications@beatmyvendor.com>"
+    RESEND_FROM_EMAIL="BeatMyyVendor <notifications@beatmyvendor.com>"
     RESEND_REPLY_TO_EMAIL=support@beatmyvendor.com
     CRON_SECRET=a-long-random-secret
 

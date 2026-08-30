@@ -58,7 +58,7 @@ export async function deliverPendingEmails(requestedBatchSize?: number): Promise
         html: email.html,
         text: email.text,
         templateKey: notification.template_key,
-        idempotencyKey: "vendorduel/notification/" + notification.notification_id
+        idempotencyKey: "beatmyyvendor/notification/" + notification.notification_id
       });
       const { error: completionError } = await supabase.rpc("mark_email_notification_sent", {
         p_notification_id: notification.notification_id,

@@ -41,7 +41,7 @@ describe("renderBrandedEmail", () => {
     const email = renderBrandedEmail(template, { duel_id: "550e8400-e29b-41d4-a716-446655440000" });
     expect(email.subject.length).toBeGreaterThan(5);
     expect(email.html).toContain('<html lang="en">');
-    expect(email.html).toContain("VENDORDUEL");
+    expect(email.html).toContain("BEATMYYVENDOR");
     expect(email.html).toContain('meta name="viewport"');
     expect(email.html).toContain('role="presentation"');
     expect(email.html).toContain("TRANSACTIONAL");
@@ -77,8 +77,8 @@ describe("renderBrandedEmail", () => {
 
   it("uses a branded safe fallback for unknown notification types", () => {
     const email = renderBrandedEmail("future_notification");
-    expect(email.subject).toBe("VendorDuel update");
+    expect(email.subject).toBe("BeatMyyVendor update");
     expect(email.html).toContain("Marketplace update");
-    expect(email.text).toContain("Open VendorDuel");
+    expect(email.text).toContain("Open BeatMyyVendor");
   });
 });

@@ -1,4 +1,4 @@
-# VendorDuel 1.0 (no docker, webapp, pwa, mobile friendly and responsive, english is default language, and add frnech and german)
+# BeatMyyVendor 1.0 (no docker, webapp, pwa, mobile friendly and responsive, english is default language, and add frnech and german)
 
 ## Positionnement
 
@@ -221,7 +221,7 @@ Champs obligatoires:
 * support inclus
 * commentaire commercial court
 
-VendorDuel calcule automatiquement:
+BeatMyyVendor calcule automatiquement:
 
 ### Current
 
@@ -251,7 +251,7 @@ Puis:
 
 Un fournisseur **ne voit pas les prix des concurrents avant la fin de la période de soumission**.
 
-Sinon VendorDuel devient une reverse auction.
+Sinon BeatMyyVendor devient une reverse auction.
 
 Je ne veux pas ça.
 
@@ -281,7 +281,7 @@ Le buyer voit:
 
 Mais **aucune offre n'est automatiquement marquée "winner"**.
 
-VendorDuel peut dire:
+BeatMyyVendor peut dire:
 
 * Lowest annual cost
 * Longest price lock
@@ -352,7 +352,7 @@ Exemple:
 >
 > You can now continue the commercial discussion directly.
 
-VendorDuel conserve l'état:
+BeatMyyVendor conserve l'état:
 
 ### Introduced
 
@@ -462,7 +462,7 @@ Share image automatiquement générée pour LinkedIn/X.
 
 # Pages publiques à la release
 
-VendorDuel ne sortira pas avec juste une homepage.
+BeatMyyVendor ne sortira pas avec juste une homepage.
 
 Il faut au minimum:
 
@@ -512,7 +512,7 @@ Pages comparison
 
 `/pricing`
 
-Pricing VendorDuel
+Pricing BeatMyyVendor
 
 `/login`
 
@@ -632,7 +632,7 @@ et les vendors déclarent:
 
 Lorsqu'un duel Zendesk apparaît:
 
-VendorDuel identifie automatiquement les vendors compatibles et leur envoie:
+BeatMyyVendor identifie automatiquement les vendors compatibles et leur envoie:
 
 > 🔥 New Zendesk Duel
 >
@@ -729,7 +729,7 @@ Stripe.
 
 Un produit:
 
-### VendorDuel Introduction
+### BeatMyyVendor Introduction
 
 `€99`
 
@@ -1029,7 +1029,7 @@ Et surtout:
 
 Je ne les découpe surtout pas en "MVP puis features".
 
-Toutes les phases aboutissent à **une seule release VendorDuel 1.0**.
+Toutes les phases aboutissent à **une seule release BeatMyyVendor 1.0**.
 
 ## Phase 0 - verrouillage, 1h
 
@@ -1187,7 +1187,7 @@ Introduction emails.
 
 Billing history.
 
-**À cette heure, VendorDuel peut réellement faire de l'argent.**
+**À cette heure, BeatMyyVendor peut réellement faire de l'argent.**
 
 ---
 
@@ -1367,7 +1367,7 @@ Premiers vendors ajoutés.
 
 Puis:
 
-# **VendorDuel is live.**
+# **BeatMyyVendor is live.**
 
 Pas:
 
@@ -1392,17 +1392,6 @@ S'il marche, on accélère.
 S'il ne marche pas, on examine les funnels pour comprendre **où il meurt**, puis on décide froidement s'il faut corriger ou tuer.
 
 ---
-
-Et il y a une règle que je veux absolument conserver pendant ces 48h:
-
-> **Aucune feature qui n'améliore directement la création d'un Duel, l'envoi d'une offre, la sélection, le paiement, l'introduction, la confiance ou l'acquisition ne rentre dans VendorDuel 1.0.**
-
-Donc pas de chatbot IA.
-Pas de social feed.
-Pas de gamification artificielle.
-Pas de système de points.
-Pas d'application mobile.
-Pas de "AI procurement copilot" parce que ça fait 2026.
 
 Le produit est déjà assez fort:
 

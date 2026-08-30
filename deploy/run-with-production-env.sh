@@ -59,7 +59,7 @@ fi
 
 export NODE_ENV=production
 export NEXT_PUBLIC_SITE_URL=https://beatmyvendor.com
-export RESEND_FROM_EMAIL="${RESEND_FROM_EMAIL:-VendorDuel <notifications@beatmyvendor.com>}"
+export RESEND_FROM_EMAIL="${RESEND_FROM_EMAIL:-BeatMyyVendor <notifications@beatmyvendor.com>}"
 export RESEND_REPLY_TO_EMAIL="${RESEND_REPLY_TO_EMAIL:-support@beatmyvendor.com}"
 export EMAIL_DELIVERY_BATCH_SIZE="${EMAIL_DELIVERY_BATCH_SIZE:-25}"
 

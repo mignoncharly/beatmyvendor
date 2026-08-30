@@ -1,5 +1,5 @@
 [Unit]
-Description=Deliver queued VendorDuel transactional emails
+Description=Deliver queued BeatMyyVendor transactional emails
 After=network-online.target beatmyvendor.service
 Wants=network-online.target
 

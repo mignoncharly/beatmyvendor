@@ -33,7 +33,7 @@ describe("FormRecovery", () => {
 
     await act(() => new Promise((resolve) => setTimeout(resolve, 300)));
 
-    const stored = sessionStorage.getItem("vendorduel:form:phase10");
+    const stored = sessionStorage.getItem("beatmyyvendor:form:phase10");
     expect(stored).toContain("Acme");
     expect(stored).not.toContain("Secret");
 
@@ -43,6 +43,6 @@ describe("FormRecovery", () => {
     expect(await screen.findByRole("textbox", { name: "Company" })).toHaveProperty("value", "Acme");
     expect(screen.getByRole("textbox", { name: "Private note" })).toHaveProperty("value", "");
     fireEvent.click(await screen.findByRole("button", { name: "Clear recovered form" }));
-    expect(sessionStorage.getItem("vendorduel:form:phase10")).toBeNull();
+    expect(sessionStorage.getItem("beatmyyvendor:form:phase10")).toBeNull();
   });
 });
