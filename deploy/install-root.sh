@@ -35,8 +35,8 @@ install -o root -g root -m 0644 "$SERVICE_SOURCE" "$SERVICE_TARGET"
 install -o root -g root -m 0644 "$EMAIL_SERVICE_SOURCE" "$EMAIL_SERVICE_TARGET"
 install -o root -g root -m 0644 "$EMAIL_TIMER_SOURCE" "$EMAIL_TIMER_TARGET"
 systemctl daemon-reload
-systemctl enable --now beatmyvendor.service
-systemctl enable --now beatmyvendor-email.timer
+systemctl enable beatmyvendor.service
+systemctl restart beatmyvendor.service
 
 for attempt in {1..20}; do
   if curl --fail --silent --show-error --max-time 3 http://127.0.0.1:3000/ >/dev/null; then break; fi
@@ -48,6 +48,14 @@ for attempt in {1..20}; do
   sleep 1
 done
 echo "Local application check passed on 127.0.0.1:3000."
+
+worker_probe_status=$(curl --silent --output /dev/null --write-out '%{http_code}' --request POST http://127.0.0.1:3000/api/maintenance/notifications)
+if [[ "$worker_probe_status" != 401 ]]; then
+  echo "Email worker endpoint check failed with HTTP $worker_probe_status; the timer was not enabled." >&2
+  exit 1
+fi
+echo "Email worker endpoint check passed."
+systemctl enable --now beatmyvendor-email.timer
 
 install -o root -g root -m 0644 "$HTTP_SOURCE" "$NGINX_TARGET"
 ln -sfn "$NGINX_TARGET" "$NGINX_ENABLED"
