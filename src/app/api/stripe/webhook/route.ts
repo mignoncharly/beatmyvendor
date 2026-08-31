@@ -7,7 +7,8 @@ import { decideCheckoutEvent, decideRefundEvent } from "@/lib/stripe-webhook";
 export const runtime = "nodejs";
 export async function POST(request: Request) {
   const signature = request.headers.get("stripe-signature"); const secret = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!signature || !secret) return NextResponse.json({ error: "Webhook is not configured." }, { status: 503 });
+  if (!secret) return NextResponse.json({ error: "Webhook is not configured." }, { status: 503 });
+  if (!signature) return NextResponse.json({ error: "Missing Stripe signature." }, { status: 400 });
   const body = await request.text(); let event: Stripe.Event;
   try { event = getStripe().webhooks.constructEvent(body, signature, secret); } catch { return NextResponse.json({ error: "Invalid signature." }, { status: 400 }); }
   const decision = decideCheckoutEvent(event);

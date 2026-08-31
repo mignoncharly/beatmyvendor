@@ -75,7 +75,10 @@ done
 for url in "${sitemap_urls[@]}"; do
   [[ "$url" == "$EXPECTED_ORIGIN"/* ]] || fail "sitemap URL has unexpected origin: $url"
   case "$url" in
-    "$EXPECTED_ORIGIN"/buyer*|"$EXPECTED_ORIGIN"/vendor*|"$EXPECTED_ORIGIN"/admin*|"$EXPECTED_ORIGIN"/account*)
+    "$EXPECTED_ORIGIN"/buyer|"$EXPECTED_ORIGIN"/buyer/*|\
+    "$EXPECTED_ORIGIN"/vendor|"$EXPECTED_ORIGIN"/vendor/*|\
+    "$EXPECTED_ORIGIN"/admin|"$EXPECTED_ORIGIN"/admin/*|\
+    "$EXPECTED_ORIGIN"/account|"$EXPECTED_ORIGIN"/account/*)
       fail "sitemap contains private URL: $url"
       ;;
   esac
