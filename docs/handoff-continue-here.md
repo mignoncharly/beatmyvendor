@@ -9,9 +9,13 @@ next" note for the next agent (codex) or a future session. Read this first, then
   post-launch fast-follow** (user decision). Phases 6, 7 are post-launch.
 - **DONE & verified: Phases 0, 1, 3.** **Phase 2 config is live**; only its one
   manual live-card smoke remains (deferred to Phase 8).
-- **NEXT: Phase 4** (production qualification) — mostly manual, some automatable.
+- **Phase 4 IN PROGRESS.** Automated gate + fixes are committed (`c971761`,
+  `2483600`) but not deployed because sudo requires the host operator password.
+- **NEXT:** run `sudo deploy/build-production.sh && sudo deploy/install-root.sh`,
+  then `npm run qualify:production`. Remove the duplicate DMARC TXT record and
+  complete the remaining manual evidence in `docs/production-qualification.md`.
 - Working branch: **`phase0-remediation-durability`** (NOT merged to `main`).
-  Latest commit `697bfc3`. All Phase 0–3 work is committed. Nothing is on `main`.
+  All Phase 0–3 work and the current Phase 4 code are committed. Nothing is on `main`.
 
 ## Environment map
 - App host dir: `/home/mignon/apps/VendorDuel`. Node **v22.23.2** via nvm at
