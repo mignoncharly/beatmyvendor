@@ -9,12 +9,12 @@ next" note for the next agent (codex) or a future session. Read this first, then
   post-launch fast-follow** (user decision). Phases 6, 7 are post-launch.
 - **DONE & verified: Phases 0, 1, 3.** **Phase 2 config is live**; only its one
   manual live-card smoke remains (deferred to Phase 8).
-- **Phase 4 automated qualification COMPLETE.** Final build deployed 12:37 UTC;
-  `npm run qualify:production` passed all 7 checks; DMARC is corrected; PostHog
-  first-visit consent and US capture behavior are browser-verified.
-- **NEXT:** complete the remaining human/provider/operations evidence in
-  `docs/production-qualification.md` (Turnstile completion, Sentry, real inbox,
-  full CSP/storage smoke, backup/restore, and installer rollback).
+- **Phase 4 COMPLETE.** Automated gate passed all 7 checks; DMARC, PostHog,
+  Turnstile, Sentry, inbox delivery, CSP/storage, backup/restore, and installer
+  rollback are verified (manual items operator-confirmed 2026-08-31).
+- **NEXT: Phase 8 final launch gate.** Rerun `npm run qualify:staging`, perform
+  the controlled live EUR 99 checkout/refund with identity reveal/revoke, confirm
+  the remaining §11 criteria, then merge to `main` and launch.
 - Working branch: **`phase0-remediation-durability`** (NOT merged to `main`).
   All Phase 0–3 work and the current Phase 4 code are committed. Nothing is on `main`.
 

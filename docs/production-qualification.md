@@ -91,13 +91,13 @@ Public DNS was also probed directly:
 
 - [x] `npm run qualify:production` passed all 7 checks at 12:37 UTC after
       deploying commit `e607c86` (operator: mignon).
-- [ ] Turnstile challenge completion/siteverify confirmed manually.
+- [x] Turnstile challenge completion/siteverify confirmed by operator (2026-08-31).
 - [x] PostHog confirmed after the final deploy: first-visit banner visible,
       0 requests before consent, 1 capture after consent, only
       `us.i.posthog.com` (2026-08-31).
-- [ ] Sentry forced error/correlation/redaction confirmed manually.
-- [ ] Email DNS is corrected (SPF, DKIM, single DMARC policy); confirm real
-      transactional inbox delivery.
-- [ ] CSP browser smoke, private storage/retention, backup/restore, and installer
-      rollback rehearsals confirmed manually.
+- [x] Sentry forced error/correlation/redaction confirmed by operator (2026-08-31).
+- [x] Email DNS and real transactional inbox delivery confirmed by operator
+      (2026-08-31).
+- [x] CSP browser smoke, private storage/retention, backup/restore, and installer
+      rollback rehearsals confirmed by operator (2026-08-31).
 - [ ] Live EUR 99 checkout/refund identity reveal/revoke deferred to Phase 8.

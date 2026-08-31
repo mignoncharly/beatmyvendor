@@ -37,6 +37,11 @@ values were never printed; only presence/mode/wiring states were checked._
 >   buyer identity; a signed `charge.refunded` **revokes** it. Runnable via
 >   `npm run qualify:staging` (needs `.env.test.local`). Remaining Phase 2 live
 >   real-card smoke stays deferred to Phase 8.
+> - **Phase 4 production qualification COMPLETE (2026-08-31).** Credential-aware
+>   build deployed; 7-check live gate green; canonical SEO/redirects, CSP,
+>   Turnstile, PostHog consent, Sentry, email/DNS, storage/retention, and
+>   backup/rollback verified. Manual provider/operations items operator-confirmed.
+>   Only the Phase 8 controlled live checkout/refund remains before go/no-go.
 > - **Phase 5 (FR/DE) formally re-scoped to a post-launch fast-follow.** Launch
 >   path is now **0 → 1 → 2 → 3 → 4 → 8**; FR/DE no longer blocks 1.0.
 >
@@ -458,26 +463,27 @@ Ordered by dependency. Names derived from findings, not the template.
 
 ## 11. Exact launch acceptance criteria
 
-- [ ] Remediation committed; `npm run check` green on the committed tree.
-- [ ] No plaintext secret files on the host; encrypted credential holds the
+- [x] Remediation committed; lint, typecheck, 105 unit tests, and the credential-aware
+      production build passed on the committed tree (2026-08-31).
+- [x] No plaintext secret files on the host; encrypted credential holds the
       current keys; provider credentials rotated where they were exposed.
-- [ ] Fresh build embeds the Supabase, analytics, and Turnstile public keys;
-      service restarted; running process newer than the build artifact.
-- [ ] `POST /api/stripe/webhook` (unsigned) → 400; maintenance/email endpoints →
+- [x] Fresh build embeds the Supabase, analytics, and Turnstile public keys;
+      service restarted at 12:37 UTC on the fresh artifact.
+- [x] `POST /api/stripe/webhook` (unsigned) → 400; maintenance/email endpoints →
       401 unauth; all three timers active.
 - [ ] Stripe **live**: €99 (9900 EUR) price = `introduction_fee_cents()`; live
       webhook (checkout + refund); one controlled live checkout **and** refund
       pass; identity reveal then revoke verified.
-- [ ] Turnstile renders and verifies on login/report; analytics fires only after
+- [x] Turnstile renders and verifies on login/report; analytics fires only after
       consent to the correct region; Sentry receives a forced error with a
       correlation id and redacted context.
-- [ ] Email delivered to a real inbox; SPF/DKIM/DMARC valid.
-- [ ] CSP browser smoke clean (Stripe/Supabase/Turnstile/analytics).
-- [ ] Storage: verification docs never public; retention deletes on schedule.
+- [x] Email delivered to a real inbox; SPF/DKIM/DMARC valid.
+- [x] CSP browser smoke clean (Stripe/Supabase/Turnstile/analytics).
+- [x] Storage: verification docs never public; retention deletes on schedule.
 - [x] SQL gate passes against staging; at least one authenticated E2E journey
       passes. **(2026-08-31: `npm run qualify:staging` green — SQL suite + auth +
       payment reveal/revoke journey.)**
-- [ ] Backup/restore and installer rollback rehearsed successfully.
+- [x] Backup/restore and installer rollback rehearsed successfully.
 - [x] FR/DE localization re-scoped to a post-launch fast-follow (2026-08-31).
 
 ## 12. Recommended execution order
