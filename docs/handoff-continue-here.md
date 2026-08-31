@@ -19,10 +19,9 @@ next" note for the next agent (codex) or a future session. Read this first, then
   reconciled to `cancelled`, and identity remained locked.
 - The live Stripe webhook now also subscribes to `checkout.session.expired` and
   `checkout.session.async_payment_failed`, matching the events handled by code.
-- **NEXT:** fast-forward the release branch to `main`; then Phase 5 FR/DE is the
-  first post-launch fast-follow.
-- Working branch: **`phase0-remediation-durability`** (NOT merged to `main`).
-  All Phase 0–3 work and the current Phase 4 code are committed. Nothing is on `main`.
+- The release branch was fast-forwarded into local `main` after the waiver was
+  recorded. Production already runs the qualified application and database fix.
+- **NEXT:** push `main`, then Phase 5 FR/DE is the first post-launch fast-follow.
 
 ## Environment map
 - App host dir: `/home/mignon/apps/VendorDuel`. Node **v22.23.2** via nvm at

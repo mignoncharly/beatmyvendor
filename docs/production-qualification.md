@@ -76,7 +76,7 @@ Phase 8 final gate; the live Stripe configuration itself is already active.
       locked. Test-mode reveal/refund coverage remains green.
 - [x] Live webhook subscriptions corrected to include
       `checkout.session.async_payment_failed` and `checkout.session.expired`.
-- [ ] Merge the release branch to `main` with the live-card residual risk recorded.
+- [x] Merge the release branch to `main` with the live-card residual risk recorded.
 
 ## 4. Phase 4 execution log — 2026-08-31
 
