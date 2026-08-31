@@ -62,8 +62,8 @@ Phase 8 final gate; the live Stripe configuration itself is already active.
 
 ## 4. Phase 4 execution log — 2026-08-31
 
-Corrected production build deployed at 12:17 UTC; service and timers active;
-installer backup: `/var/backups/beatmyvendor/20260831T121717Z`.
+Final corrected production build deployed at 12:37 UTC; service and timers active;
+installer backup: `/var/backups/beatmyvendor/20260831T123704Z`.
 
 The initial read-only live probe passed the CSP allowlist and Turnstile-presence
 checks, then found a release-blocking canonical-origin defect:
@@ -89,12 +89,12 @@ Public DNS was also probed directly:
 - [x] DMARC now publishes exactly one `p=quarantine` policy; confirmed through
   Cloudflare, Google, and Quad9 resolvers (2026-08-31).
 
-- [ ] `npm run qualify:production` passes after corrected deploy (record UTC,
-      commit, and operator).
+- [x] `npm run qualify:production` passed all 7 checks at 12:37 UTC after
+      deploying commit `e607c86` (operator: mignon).
 - [ ] Turnstile challenge completion/siteverify confirmed manually.
-- [x] PostHog network behavior confirmed in an isolated browser: 0 requests before
-      consent, 1 capture after consent, only `us.i.posthog.com` (2026-08-31).
-      Reconfirm that the first-visit banner renders after the corrected deploy.
+- [x] PostHog confirmed after the final deploy: first-visit banner visible,
+      0 requests before consent, 1 capture after consent, only
+      `us.i.posthog.com` (2026-08-31).
 - [ ] Sentry forced error/correlation/redaction confirmed manually.
 - [ ] Email DNS is corrected (SPF, DKIM, single DMARC policy); confirm real
       transactional inbox delivery.

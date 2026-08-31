@@ -1,6 +1,6 @@
 # BeatMyVendor — Launch handoff (continue here)
 
-_Last updated 2026-08-31 by Claude. This is the authoritative "where we are / what's
+_Last updated 2026-08-31 by Codex. This is the authoritative "where we are / what's
 next" note for the next agent (codex) or a future session. Read this first, then
 `docs/beatmyvendor-launch-readiness-audit.md` (the update block at its top is current)._
 
@@ -9,11 +9,12 @@ next" note for the next agent (codex) or a future session. Read this first, then
   post-launch fast-follow** (user decision). Phases 6, 7 are post-launch.
 - **DONE & verified: Phases 0, 1, 3.** **Phase 2 config is live**; only its one
   manual live-card smoke remains (deferred to Phase 8).
-- **Phase 4 IN PROGRESS.** Automated gate + fixes are committed (`c971761`,
-  `2483600`) but not deployed because sudo requires the host operator password.
-- **NEXT:** run `sudo deploy/build-production.sh && sudo deploy/install-root.sh`,
-  then `npm run qualify:production`. Remove the duplicate DMARC TXT record and
-  complete the remaining manual evidence in `docs/production-qualification.md`.
+- **Phase 4 automated qualification COMPLETE.** Final build deployed 12:37 UTC;
+  `npm run qualify:production` passed all 7 checks; DMARC is corrected; PostHog
+  first-visit consent and US capture behavior are browser-verified.
+- **NEXT:** complete the remaining human/provider/operations evidence in
+  `docs/production-qualification.md` (Turnstile completion, Sentry, real inbox,
+  full CSP/storage smoke, backup/restore, and installer rollback).
 - Working branch: **`phase0-remediation-durability`** (NOT merged to `main`).
   All Phase 0–3 work and the current Phase 4 code are committed. Nothing is on `main`.
 
