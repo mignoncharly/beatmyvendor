@@ -60,6 +60,17 @@ FR/DE localization, catalog-source consolidation, and dedicated fraud tooling
 are post-launch. The controlled live EUR 99 checkout/refund is deferred to the
 Phase 8 final gate; the live Stripe configuration itself is already active.
 
+## 5. Phase 8 final gate — 2026-08-31
+
+- [x] `npm run qualify:staging`: SQL security suite passed; 2 authenticated
+      Playwright journeys passed, including payment reveal and refund revoke.
+- [x] `npm run qualify:production`: all 7 live checks passed.
+- [ ] Controlled live EUR 99 checkout/refund: verify locked identity before pay,
+      revealed identity after signed payment webhook, and locked identity after
+      admin refund/`charge.refunded` reconciliation.
+- [ ] After the live smoke, mark the last audit criterion complete and merge the
+      release branch to `main`.
+
 ## 4. Phase 4 execution log — 2026-08-31
 
 Final corrected production build deployed at 12:37 UTC; service and timers active;

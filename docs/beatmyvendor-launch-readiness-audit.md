@@ -42,6 +42,9 @@ values were never printed; only presence/mode/wiring states were checked._
 >   Turnstile, PostHog consent, Sentry, email/DNS, storage/retention, and
 >   backup/rollback verified. Manual provider/operations items operator-confirmed.
 >   Only the Phase 8 controlled live checkout/refund remains before go/no-go.
+> - **Phase 8 automated gates GREEN (2026-08-31).** Fresh staging SQL + 2-test
+>   authenticated journey passed; fresh production 7-check gate passed. Only the
+>   controlled live EUR 99 checkout/refund reveal/revoke remains.
 > - **Phase 5 (FR/DE) formally re-scoped to a post-launch fast-follow.** Launch
 >   path is now **0 → 1 → 2 → 3 → 4 → 8**; FR/DE no longer blocks 1.0.
 >

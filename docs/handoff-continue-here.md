@@ -12,9 +12,11 @@ next" note for the next agent (codex) or a future session. Read this first, then
 - **Phase 4 COMPLETE.** Automated gate passed all 7 checks; DMARC, PostHog,
   Turnstile, Sentry, inbox delivery, CSP/storage, backup/restore, and installer
   rollback are verified (manual items operator-confirmed 2026-08-31).
-- **NEXT: Phase 8 final launch gate.** Rerun `npm run qualify:staging`, perform
-  the controlled live EUR 99 checkout/refund with identity reveal/revoke, confirm
-  the remaining §11 criteria, then merge to `main` and launch.
+- **Phase 8 IN PROGRESS.** Fresh staging gate is green (SQL + 2 authenticated
+  journeys) and the 7-check production gate is green.
+- **NEXT / ONLY BLOCKER:** perform the controlled live EUR 99 checkout/refund,
+  confirming vendor identity locked before payment, revealed after the signed
+  webhook, and locked again after refund. Then merge to `main` and launch.
 - Working branch: **`phase0-remediation-durability`** (NOT merged to `main`).
   All Phase 0–3 work and the current Phase 4 code are committed. Nothing is on `main`.
 
