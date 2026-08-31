@@ -62,6 +62,9 @@ Phase 8 final gate; the live Stripe configuration itself is already active.
 
 ## 4. Phase 4 execution log — 2026-08-31
 
+Corrected production build deployed at 12:17 UTC; service and timers active;
+installer backup: `/var/backups/beatmyvendor/20260831T121717Z`.
+
 The initial read-only live probe passed the CSP allowlist and Turnstile-presence
 checks, then found a release-blocking canonical-origin defect:
 
@@ -83,9 +86,8 @@ Public DNS was also probed directly:
 - SPF exists at the apex and authorizes `spf.astermail.org`.
 - MX points to `mx.astermail.org`.
 - `resend._domainkey` publishes a DKIM key.
-- **Blocker:** `_dmarc.beatmyvendor.com` publishes two DMARC records, one with
-  `p=none` and one with `p=quarantine`. Remove the obsolete duplicate so
-  exactly one DMARC policy remains, then re-query DNS before inbox testing.
+- [x] DMARC now publishes exactly one `p=quarantine` policy; confirmed through
+  Cloudflare, Google, and Quad9 resolvers (2026-08-31).
 
 - [ ] `npm run qualify:production` passes after corrected deploy (record UTC,
       commit, and operator).
@@ -94,8 +96,8 @@ Public DNS was also probed directly:
       consent, 1 capture after consent, only `us.i.posthog.com` (2026-08-31).
       Reconfirm that the first-visit banner renders after the corrected deploy.
 - [ ] Sentry forced error/correlation/redaction confirmed manually.
-- [ ] Email DNS: remove duplicate DMARC record; revalidate SPF/DKIM/DMARC; then
-      confirm real inbox delivery.
+- [ ] Email DNS is corrected (SPF, DKIM, single DMARC policy); confirm real
+      transactional inbox delivery.
 - [ ] CSP browser smoke, private storage/retention, backup/restore, and installer
       rollback rehearsals confirmed manually.
 - [ ] Live EUR 99 checkout/refund identity reveal/revoke deferred to Phase 8.
