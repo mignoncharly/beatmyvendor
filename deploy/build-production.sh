@@ -68,7 +68,7 @@ trap cleanup EXIT
 # for `next build`. The public origin is deliberately enforced *after* sourcing:
 # a stale localhost value in the credential must never generate production
 # canonicals, sitemap entries, or authentication redirects.
-BUILD_INNER='set -a; source "$0"; set +a; export NODE_ENV=production; export NEXT_PUBLIC_SITE_URL=https://beatmyvendor.com; exec npm run build'
+BUILD_INNER='set -a; source "$0"; set +a; export NODE_ENV=production; export NEXT_PUBLIC_SITE_URL=https://beatmyvendor.com; export NEXT_PUBLIC_OPTIONAL_COOKIES_ENABLED=true; exec npm run build'
 
 if [[ $EUID -eq 0 && "$BUILD_USER" != "root" ]]; then
   runuser -u "$BUILD_USER" -- env \

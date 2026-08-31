@@ -78,12 +78,24 @@ metadata contain localhost. Private redirects also emit `X-Robots-Tag: noindex`
 so the SEO contract remains visible even when authentication redirects before
 layout metadata renders.
 
+Public DNS was also probed directly:
+
+- SPF exists at the apex and authorizes `spf.astermail.org`.
+- MX points to `mx.astermail.org`.
+- `resend._domainkey` publishes a DKIM key.
+- **Blocker:** `_dmarc.beatmyvendor.com` publishes two DMARC records, one with
+  `p=none` and one with `p=quarantine`. Remove the obsolete duplicate so
+  exactly one DMARC policy remains, then re-query DNS before inbox testing.
+
 - [ ] `npm run qualify:production` passes after corrected deploy (record UTC,
       commit, and operator).
 - [ ] Turnstile challenge completion/siteverify confirmed manually.
-- [ ] PostHog dormant-before-consent and capture-after-consent confirmed manually.
+- [x] PostHog network behavior confirmed in an isolated browser: 0 requests before
+      consent, 1 capture after consent, only `us.i.posthog.com` (2026-08-31).
+      Reconfirm that the first-visit banner renders after the corrected deploy.
 - [ ] Sentry forced error/correlation/redaction confirmed manually.
-- [ ] Email SPF/DKIM/DMARC and inbox delivery confirmed manually.
+- [ ] Email DNS: remove duplicate DMARC record; revalidate SPF/DKIM/DMARC; then
+      confirm real inbox delivery.
 - [ ] CSP browser smoke, private storage/retention, backup/restore, and installer
       rollback rehearsals confirmed manually.
 - [ ] Live EUR 99 checkout/refund identity reveal/revoke deferred to Phase 8.
