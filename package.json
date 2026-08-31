@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:production": "deploy/build-production.sh",
     "start": "next start",
     "test": "vitest run",
     "test:e2e": "playwright test",

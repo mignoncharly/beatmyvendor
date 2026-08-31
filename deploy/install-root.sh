@@ -30,6 +30,27 @@ for required_file in "$SERVICE_SOURCE" "$EMAIL_SERVICE_SOURCE" "$EMAIL_TIMER_SOU
   [[ -f "$required_file" ]] || { echo "Missing deployment file: $required_file" >&2; exit 1; }
 done
 
+# Verify the on-disk build embedded the public keys from the credential. A plain
+# `next build` (i.e. not deploy/build-production.sh) drops NEXT_PUBLIC_* from the
+# client bundle, leaving Turnstile and analytics dormant. Fail fast rather than
+# restart the service onto a keyless build.
+BUILD_STATIC_DIR="$APP_DIR/.next/static"
+[[ -d "$BUILD_STATIC_DIR" ]] || { echo "No build at $BUILD_STATIC_DIR; run deploy/build-production.sh first." >&2; exit 1; }
+CRED_PLAIN="$(mktemp)"; chmod 0600 "$CRED_PLAIN"
+trap 'rm -f "$CRED_PLAIN"' EXIT
+systemd-creds decrypt --name=beatmyvendor.env "$CREDENTIAL_PATH" "$CRED_PLAIN"
+for key_var in NEXT_PUBLIC_TURNSTILE_SITE_KEY NEXT_PUBLIC_ANALYTICS_KEY; do
+  key_val="$(set -a; source "$CRED_PLAIN"; set +a; printf '%s' "${!key_var:-}")"
+  [[ -n "$key_val" ]] || { echo "Credential is missing $key_var; cannot verify the build." >&2; exit 1; }
+  grep -rqF -- "$key_val" "$BUILD_STATIC_DIR" || {
+    echo "The build at $BUILD_STATIC_DIR does not embed $key_var." >&2
+    echo "Rebuild with deploy/build-production.sh (NOT a plain 'npm run build'), then re-run this installer." >&2
+    exit 1
+  }
+done
+rm -f "$CRED_PLAIN"; trap - EXIT
+echo "Build embeds the Turnstile and analytics public keys."
+
 mkdir -p "$BACKUP_DIR" "$ACME_ROOT"
 if [[ -e "$SERVICE_TARGET" ]]; then cp -a "$SERVICE_TARGET" "$BACKUP_DIR/beatmyvendor.service"; fi
 if [[ -e "$EMAIL_SERVICE_TARGET" ]]; then cp -a "$EMAIL_SERVICE_TARGET" "$BACKUP_DIR/beatmyvendor-email.service"; fi

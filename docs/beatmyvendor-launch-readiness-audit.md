@@ -4,7 +4,24 @@ _Fresh, evidence-based audit performed 2026-08-30 against the current working tr
 migrations, deployment scripts, running services, and the build on disk. Secret
 values were never printed; only presence/mode/wiring states were checked._
 
-This audit supersedes the status claims in 
+> **Update 2026-08-31 (session).**
+> - **Phase 0** durability is committed (`1257335`); `production-secrets.md` is
+>   gitignored and holds no secrets. Residual = manual root steps only (remove
+>   plaintext `beatmyvendor.env`/`supabase_keys.md` after re-encrypt).
+> - **Phase 1 correction:** the "keys in build" claim below was a **false
+>   positive**. The build embeds `eu.i.posthog.com` (code default) with **no**
+>   real PostHog/Turnstile keys — Turnstile + analytics are still dormant. Root
+>   cause: `NEXT_PUBLIC_LEGAL_NAME` was **unquoted** in `beatmyvendor.env`, so
+>   `source` aborted and `run-with-production-env.sh` fell back to defaults at
+>   both build and runtime. Fixed (quoted).
+> - New durable build path: `deploy/build-production.sh` (`npm run build:production`)
+>   exports the credential before `next build`; `deploy/install-root.sh` now
+>   **refuses to deploy a keyless build**. Finish Phase 1 (root):
+>   `encrypt-credential.sh beatmyvendor.env` → `build-production.sh` → `install-root.sh`.
+> - **Phase 5 (FR/DE) formally re-scoped to a post-launch fast-follow.** Launch
+>   path is now **0 → 1 → 2 → 3 → 4 → 8**; FR/DE no longer blocks 1.0.
+>
+> This audit supersedes the status claims in 
 `docs/beatmyvendor-implementation-audit.md` where evidence differs. The prior
 report is largely accurate on **code** completion (phases 0–7 are implemented),
 but it materially understates two operational realities discovered here:
@@ -441,7 +458,7 @@ Ordered by dependency. Names derived from findings, not the template.
 - [ ] SQL gate passes against staging; at least one authenticated E2E journey
       passes.
 - [ ] Backup/restore and installer rollback rehearsed successfully.
-- [ ] FR/DE localization shipped **or** formally re-scoped to fast-follow.
+- [x] FR/DE localization re-scoped to a post-launch fast-follow (2026-08-31).
 
 ## 12. Recommended execution order
 
