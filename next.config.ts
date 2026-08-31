@@ -37,6 +37,12 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/:privatePath(buyer|vendor|admin|account)/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive, nosnippet" }
+        ]
+      },
+      {
         source: "/(.*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },

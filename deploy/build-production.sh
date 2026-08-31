@@ -65,19 +65,18 @@ cleanup() { if [[ "$CLEANUP_ENV" == true && -f "$ENV_FILE" ]]; then shred -u "$E
 trap cleanup EXIT
 
 # Source the env inside the build shell so every NEXT_PUBLIC_* value is present
-# for `next build`. NEXT_PUBLIC_SITE_URL is defaulted to match the runtime wrapper
-# (run-with-production-env.sh) and is overridden if the env file sets it.
-BUILD_INNER='set -a; source "$0"; set +a; export NODE_ENV=production; exec npm run build'
+# for `next build`. The public origin is deliberately enforced *after* sourcing:
+# a stale localhost value in the credential must never generate production
+# canonicals, sitemap entries, or authentication redirects.
+BUILD_INNER='set -a; source "$0"; set +a; export NODE_ENV=production; export NEXT_PUBLIC_SITE_URL=https://beatmyvendor.com; exec npm run build'
 
 if [[ $EUID -eq 0 && "$BUILD_USER" != "root" ]]; then
   runuser -u "$BUILD_USER" -- env \
     PATH="$BUILD_PATH" \
-    NEXT_PUBLIC_SITE_URL="${NEXT_PUBLIC_SITE_URL:-https://beatmyvendor.com}" \
     bash -c "$BUILD_INNER" "$ENV_FILE"
 else
   env \
     PATH="$BUILD_PATH" \
-    NEXT_PUBLIC_SITE_URL="${NEXT_PUBLIC_SITE_URL:-https://beatmyvendor.com}" \
     bash -c "$BUILD_INNER" "$ENV_FILE"
 fi
 

@@ -36,6 +36,20 @@ done
 # restart the service onto a keyless build.
 BUILD_STATIC_DIR="$APP_DIR/.next/static"
 [[ -d "$BUILD_STATIC_DIR" ]] || { echo "No build at $BUILD_STATIC_DIR; run deploy/build-production.sh first." >&2; exit 1; }
+EXPECTED_SITE_URL=https://beatmyvendor.com
+for generated_file in "$APP_DIR/.next/server/app/robots.txt.body" "$APP_DIR/.next/server/app/sitemap.xml.body"; do
+  [[ -f "$generated_file" ]] || { echo "Missing generated production metadata: $generated_file" >&2; exit 1; }
+  grep -qF -- "$EXPECTED_SITE_URL" "$generated_file" || {
+    echo "The build at $APP_DIR/.next does not use $EXPECTED_SITE_URL in $(basename "$generated_file")." >&2
+    echo "Rebuild with deploy/build-production.sh, then re-run this installer." >&2
+    exit 1
+  }
+  if grep -qF -- "localhost" "$generated_file"; then
+    echo "The build at $APP_DIR/.next contains a localhost URL in $(basename "$generated_file")." >&2
+    echo "Refusing to deploy invalid production SEO metadata." >&2
+    exit 1
+  fi
+done
 CRED_PLAIN="$(mktemp)"; chmod 0600 "$CRED_PLAIN"
 trap 'rm -f "$CRED_PLAIN"' EXIT
 systemd-creds decrypt --name=beatmyvendor.env "$CREDENTIAL_PATH" "$CRED_PLAIN"
