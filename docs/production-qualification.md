@@ -65,6 +65,10 @@ Phase 8 final gate; the live Stripe configuration itself is already active.
 - [x] `npm run qualify:staging`: SQL security suite passed; 2 authenticated
       Playwright journeys passed, including payment reveal and refund revoke.
 - [x] `npm run qualify:production`: all 7 live checks passed.
+- [ ] Apply `20260831150000_phase8_selection_notification_cast.sql` to production.
+      The first controlled selection found and atomically rolled back a `42804`
+      notification enum-cast error; the fix and RPC regression are green on
+      staging, and no live payment or identity release occurred.
 - [ ] Controlled live EUR 99 checkout/refund: verify locked identity before pay,
       revealed identity after signed payment webhook, and locked identity after
       admin refund/`charge.refunded` reconciliation.

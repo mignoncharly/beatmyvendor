@@ -325,5 +325,68 @@ end $$;
 
 rollback to savepoint phase1_lifecycle;
 
+-- Phase 8 live-gate regression: exercise the client-callable selection RPC.
+-- A bare text channel in its INSERT ... SELECT previously raised 42804 and
+-- rolled back the selection before Stripe Checkout could begin.
+reset role;
+savepoint phase8_selection_rpc;
+insert into public.duels (
+  id,slug,buyer_organization_id,created_by,category_id,current_software_product_id,
+  current_price,billing_frequency,currency,seats,country_code,company_size,buyer_intent,
+  status,submission_deadline,published_at
+) values (
+  '30000000-0000-4000-8000-000000000010','integration-selection-rpc',
+  '10000000-0000-4000-8000-000000000001','00000000-0000-4000-8000-000000000002',
+  '20000000-0000-4000-8000-000000000001','20000000-0000-4000-8000-000000000002',
+  12000,'annual','EUR',20,'FR','11-50','actively_looking','draft',now()+interval '7 days',now()
+);
+insert into public.duel_verifications (duel_id,verification_type,status,reviewed_by,reviewed_at)
+values ('30000000-0000-4000-8000-000000000010','spend','verified','00000000-0000-4000-8000-000000000001',now());
+update public.duels set status='pending_verification' where id='30000000-0000-4000-8000-000000000010';
+update public.duels set status='open' where id='30000000-0000-4000-8000-000000000010';
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000004',true);
+insert into public.offers (
+  id,duel_id,vendor_organization_id,vendor_product_id,created_by,plan_name,annual_price,currency,
+  seats_included,contract_months,price_lock_months,valid_until,migration_included,onboarding_included,
+  support_included,accuracy_confirmed_at
+) values (
+  '40000000-0000-4000-8000-000000000010','30000000-0000-4000-8000-000000000010',
+  '10000000-0000-4000-8000-000000000003','20000000-0000-4000-8000-000000000004',
+  '00000000-0000-4000-8000-000000000004','Selection RPC Plan',9000,'EUR',20,12,12,
+  now()+interval '30 days',true,true,'Email support',now()
+);
+update public.offers set status='submitted' where id='40000000-0000-4000-8000-000000000010';
+update public.duels set status='reviewing' where id='30000000-0000-4000-8000-000000000010';
+
+set local role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000002',true);
+do $$
+declare saved_selection uuid;
+begin
+  saved_selection := public.select_buyer_offer(
+    '30000000-0000-4000-8000-000000000010',
+    '40000000-0000-4000-8000-000000000010'
+  );
+  if saved_selection is null
+     or not exists (select 1 from public.introductions where selection_id=saved_selection and status='awaiting_payment') then
+    raise exception 'Buyer selection RPC did not create the awaiting-payment introduction';
+  end if;
+end $$;
+
+reset role;
+do $$
+begin
+  if not exists (
+    select 1 from public.notifications
+    where organization_id='10000000-0000-4000-8000-000000000003'
+      and template_key='challenge_selected'
+      and payload->>'offer_id'='40000000-0000-4000-8000-000000000010'
+  ) then
+    raise exception 'Buyer selection RPC did not notify the selected vendor';
+  end if;
+end $$;
+
+rollback to savepoint phase8_selection_rpc;
+
 reset role;
 rollback;

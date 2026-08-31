@@ -43,8 +43,13 @@ values were never printed; only presence/mode/wiring states were checked._
 >   backup/rollback verified. Manual provider/operations items operator-confirmed.
 >   Only the Phase 8 controlled live checkout/refund remains before go/no-go.
 > - **Phase 8 automated gates GREEN (2026-08-31).** Fresh staging SQL + 2-test
->   authenticated journey passed; fresh production 7-check gate passed. Only the
->   controlled live EUR 99 checkout/refund reveal/revoke remains.
+>   authenticated journey passed; fresh production 7-check gate passed.
+> - **Phase 8 live-gate blocker found before payment (2026-08-31).** The controlled
+>   buyer selection failed atomically with PostgreSQL `42804`: notification
+>   fan-out in `select_buyer_offer` lacked an explicit enum cast. Migration
+>   `20260831150000_phase8_selection_notification_cast.sql` fixes selection and
+>   review fan-out, with a transactional RPC regression; the full staging gate is
+>   green. Apply it to production, then resume the untouched live fixture.
 > - **Phase 5 (FR/DE) formally re-scoped to a post-launch fast-follow.** Launch
 >   path is now **0 → 1 → 2 → 3 → 4 → 8**; FR/DE no longer blocks 1.0.
 >
