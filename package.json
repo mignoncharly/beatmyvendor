@@ -12,6 +12,7 @@
     "test:sql": "bash scripts/qualify-sql.sh",
     "test:phase10": "playwright test tests/phase10-polish.spec.ts",
     "test:phase11": "playwright test tests/phase11-journey.spec.ts",
+    "test:journey": "bash scripts/run-journey.sh",
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "check:full": "npm run check && npm run test:e2e",
     "qualify": "npm run check && npm run test:sql",
