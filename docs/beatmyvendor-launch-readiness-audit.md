@@ -49,7 +49,12 @@ values were never printed; only presence/mode/wiring states were checked._
 >   fan-out in `select_buyer_offer` lacked an explicit enum cast. Migration
 >   `20260831150000_phase8_selection_notification_cast.sql` fixes selection and
 >   review fan-out, with a transactional RPC regression; the full staging gate is
->   green. Apply it to production, then resume the untouched live fixture.
+>   green. The migration is now applied to production and selection succeeds.
+> - **Live-card criterion waived by operator (2026-08-31).** Pre-payment identity
+>   locking passed live, but the operator chose not to incur a real EUR 99 charge.
+>   The Checkout was expired unpaid and reconciled to `cancelled`; identity stayed
+>   locked. Live reveal/refund remains untested and is not represented as passed.
+>   Stripe subscriptions were corrected to include async failure and expiration.
 > - **Phase 5 (FR/DE) formally re-scoped to a post-launch fast-follow.** Launch
 >   path is now **0 → 1 → 2 → 3 → 4 → 8**; FR/DE no longer blocks 1.0.
 >

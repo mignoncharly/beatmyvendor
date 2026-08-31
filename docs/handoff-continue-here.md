@@ -12,15 +12,15 @@ next" note for the next agent (codex) or a future session. Read this first, then
 - **Phase 4 COMPLETE.** Automated gate passed all 7 checks; DMARC, PostHog,
   Turnstile, Sentry, inbox delivery, CSP/storage, backup/restore, and installer
   rollback are verified (manual items operator-confirmed 2026-08-31).
-- **Phase 8 IN PROGRESS.** The live smoke exposed PostgreSQL `42804` in
-  `select_buyer_offer`: an `INSERT ... SELECT` used an uncast notification enum.
-  Migration `20260831150000_phase8_selection_notification_cast.sql` fixes both
-  affected selection/review fan-out paths; the full staging gate is green.
-- **NEXT / ONLY BLOCKER:** apply that migration to production (this host has no
-  production DB password/management token), then resume the intact Phase 8
-  fixture at buyer selection and perform the controlled live EUR 99
-  checkout/refund. Confirm identity locked before payment, revealed after the
-  signed webhook, and locked again after refund; then merge to `main` and launch.
+- **Phase 8 CLOSED WITH OPERATOR WAIVER.** The selection enum-cast fix is live;
+  selection and pre-payment identity locking passed in production. The operator
+  declined to incur a real EUR 99 charge, so live reveal/refund remains untested
+  and is explicitly waived, not marked passed. The unpaid Checkout was expired,
+  reconciled to `cancelled`, and identity remained locked.
+- The live Stripe webhook now also subscribes to `checkout.session.expired` and
+  `checkout.session.async_payment_failed`, matching the events handled by code.
+- **NEXT:** fast-forward the release branch to `main`; then Phase 5 FR/DE is the
+  first post-launch fast-follow.
 - Working branch: **`phase0-remediation-durability`** (NOT merged to `main`).
   All Phase 0–3 work and the current Phase 4 code are committed. Nothing is on `main`.
 
