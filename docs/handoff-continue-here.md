@@ -21,7 +21,7 @@ next" note for the next agent (codex) or a future session. Read this first, then
   `checkout.session.async_payment_failed`, matching the events handled by code.
 - The release branch was fast-forwarded into local `main` after the waiver was
   recorded. Production already runs the qualified application and database fix.
-- **NEXT:** push `main`, then Phase 5 FR/DE is the first post-launch fast-follow.
+- **NEXT:** Phase 5 FR/DE is the first post-launch fast-follow; start from `main`.
 
 ## Environment map
 - App host dir: `/home/mignon/apps/VendorDuel`. Node **v22.23.2** via nvm at
