@@ -1,5 +1,10 @@
 # Phase 3 — Authenticated E2E test environment
 
+> **Status (2026-08-31): implemented and green.** With `.env.test.local` in place:
+> `npm run qualify:staging` runs the SQL security gate (over the IPv4 session
+> pooler) **and** the authenticated Playwright journey. `npm run test:journey`
+> runs just the journey; `npm run test:sql:staging` just the SQL gate.
+
 The authenticated journey exercises the real app (magic-link auth, RLS, storage),
 so it needs a **non-production** Supabase + **Stripe test** mode. It must never run
 against the production project — it seeds users and writes real rows.

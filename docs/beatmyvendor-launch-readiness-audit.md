@@ -28,6 +28,15 @@ values were never printed; only presence/mode/wiring states were checked._
 >   rotated. Credential mtime (07:30:49) predates svc start (07:30:59) ⇒ live key
 >   loaded by the running process. **Remaining Phase 2:** one controlled live
 >   checkout + refund qualifying identity reveal→revoke. Next engineering: **Phase 3**.
+> - **Phase 3 authenticated E2E COMPLETE (BMV-034).** Stood up a staging Supabase
+>   project (IPv4 session pooler), applied all 25 migrations, and ran the SQL
+>   security suite green against it. Built a magic-link auth fixture + a full
+>   authenticated journey (staging Supabase + Stripe test): buyer sees their duel;
+>   vendor identity is **locked pre-payment**; the real billing action creates a
+>   real Stripe test session; a signed `checkout.session.completed` **reveals** the
+>   buyer identity; a signed `charge.refunded` **revokes** it. Runnable via
+>   `npm run qualify:staging` (needs `.env.test.local`). Remaining Phase 2 live
+>   real-card smoke stays deferred to Phase 8.
 > - **Phase 5 (FR/DE) formally re-scoped to a post-launch fast-follow.** Launch
 >   path is now **0 → 1 → 2 → 3 → 4 → 8**; FR/DE no longer blocks 1.0.
 >
@@ -465,8 +474,9 @@ Ordered by dependency. Names derived from findings, not the template.
 - [ ] Email delivered to a real inbox; SPF/DKIM/DMARC valid.
 - [ ] CSP browser smoke clean (Stripe/Supabase/Turnstile/analytics).
 - [ ] Storage: verification docs never public; retention deletes on schedule.
-- [ ] SQL gate passes against staging; at least one authenticated E2E journey
-      passes.
+- [x] SQL gate passes against staging; at least one authenticated E2E journey
+      passes. **(2026-08-31: `npm run qualify:staging` green — SQL suite + auth +
+      payment reveal/revoke journey.)**
 - [ ] Backup/restore and installer rollback rehearsed successfully.
 - [x] FR/DE localization re-scoped to a post-launch fast-follow (2026-08-31).
 
@@ -475,4 +485,4 @@ Ordered by dependency. Names derived from findings, not the template.
 Phase 0 → 1 → 2 → 3 → 4 → (5 if not re-scoped) → 8 launch gate.
 Phases 6 and 7 run after launch. Phases 0 and 1 are small and unblock everything;
 do them first and together. Phase 5 (localization) is the long pole — decide its
-scope **now** so it can run in parallel with 2–4 if it stays in the 1.0 gate.
+scope **now** so it can run in parallel with 2–4 if it stays in the 1.0 gate. 

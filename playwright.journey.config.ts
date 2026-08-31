@@ -4,6 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
 // Launch via scripts/run-journey.sh (maps .env.test.local into the app's env).
 export default defineConfig({
   testDir: "./tests/journey",
+  globalSetup: "./tests/journey/global-setup.ts",
   fullyParallel: false,
   workers: 1,
   forbidOnly: Boolean(process.env.CI),
