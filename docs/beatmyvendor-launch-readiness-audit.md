@@ -21,8 +21,13 @@ values were never printed; only presence/mode/wiring states were checked._
 >   removed; credential re-encrypted with corrected keys; rebuilt via
 >   `build-production.sh` and restarted via `install-root.sh` (gate passed).
 >   Runtime CSP + build now serve `us.i.posthog.com` with the real PostHog +
->   Turnstile keys → bot protection and analytics live. Next: **Phase 2** (live
->   Stripe cutover).
+>   Turnstile keys → bot protection and analytics live.
+> - **Phase 2 config LIVE (verified 07:30 UTC).** Credential holds `sk_live` +
+>   live `whsec` + live `price_…`; live €99 (9900 EUR) price, live webhook
+>   (checkout + async + `charge.refunded`), and price id all confirmed; Resend key
+>   rotated. Credential mtime (07:30:49) predates svc start (07:30:59) ⇒ live key
+>   loaded by the running process. **Remaining Phase 2:** one controlled live
+>   checkout + refund qualifying identity reveal→revoke. Next engineering: **Phase 3**.
 > - **Phase 5 (FR/DE) formally re-scoped to a post-launch fast-follow.** Launch
 >   path is now **0 → 1 → 2 → 3 → 4 → 8**; FR/DE no longer blocks 1.0.
 >
