@@ -16,8 +16,13 @@ values were never printed; only presence/mode/wiring states were checked._
 >   both build and runtime. Fixed (quoted).
 > - New durable build path: `deploy/build-production.sh` (`npm run build:production`)
 >   exports the credential before `next build`; `deploy/install-root.sh` now
->   **refuses to deploy a keyless build**. Finish Phase 1 (root):
->   `encrypt-credential.sh beatmyvendor.env` → `build-production.sh` → `install-root.sh`.
+>   **refuses to deploy a keyless build**.
+> - **Phases 0 and 1 COMPLETE (verified 07:30 UTC).** Plaintext secret files
+>   removed; credential re-encrypted with corrected keys; rebuilt via
+>   `build-production.sh` and restarted via `install-root.sh` (gate passed).
+>   Runtime CSP + build now serve `us.i.posthog.com` with the real PostHog +
+>   Turnstile keys → bot protection and analytics live. Next: **Phase 2** (live
+>   Stripe cutover).
 > - **Phase 5 (FR/DE) formally re-scoped to a post-launch fast-follow.** Launch
 >   path is now **0 → 1 → 2 → 3 → 4 → 8**; FR/DE no longer blocks 1.0.
 >
